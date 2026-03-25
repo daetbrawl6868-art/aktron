@@ -1,0 +1,1915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aktron — Software Engineering & Cybersecurity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=SF+Pro+Display:wght@700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #0071e3;
+      --blue2: #0077ed;
+      --green: #30d158;
+      --red: #ff453a;
+      --orange: #ff9f0a;
+      --purple: #bf5af2;
+      --bg: #ffffff;
+      --bg2: #f5f5f7;
+      --bg3: #e8e8ed;
+      --dark: #1d1d1f;
+      --mid: #6e6e73;
+      --light: #aeaeb2;
+      --sep: rgba(0,0,0,.06);
+      --sep2: rgba(0,0,0,.1);
+      --f: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Text', sans-serif;
+      --fd: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', sans-serif;
+      --m: 'JetBrains Mono', 'SF Mono', 'Menlo', monospace;
+      --r: 20px;
+      --rs: 14px;
+      --sh: 0 2px 16px rgba(0,0,0,.06);
+      --sh2: 0 8px 40px rgba(0,0,0,.1);
+      --sh3: 0 24px 80px rgba(0,0,0,.14);
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+    body{font-family:var(--f);background:var(--bg);color:var(--dark);overflow-x:hidden}
+    a{text-decoration:none;color:inherit}
+    img{display:block}
+    button{cursor:pointer;font-family:inherit}
+
+    /* PROGRESS */
+    #progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--purple));width:0;z-index:9999;border-radius:0 2px 2px 0;transition:width .04s linear}
+
+    .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+    .section{padding:120px 0}
+
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:14px;font-family:var(--m)}
+    .eyebrow::before{content:'';width:20px;height:1.5px;background:var(--blue);border-radius:2px}
+
+    .h1{font-family:var(--fd);font-size:clamp(52px,8vw,96px);font-weight:700;letter-spacing:-3px;line-height:.9}
+    .h2{font-family:var(--fd);font-size:clamp(36px,4.5vw,64px);font-weight:700;letter-spacing:-2px;line-height:1.05}
+    .body-lg{font-size:17px;color:var(--mid);line-height:1.65;font-weight:400}
+
+    .grad{background:linear-gradient(135deg,var(--blue) 0%,var(--purple) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+    .rv{opacity:0;transform:translateY(32px) scale(.99);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+    .rv.in{opacity:1;transform:none}
+    .lang-out{opacity:0;transform:translateY(4px);transition:opacity .15s,transform .15s}
+
+    /* ─── NAV ─── */
+    nav{position:fixed;top:0;left:0;right:0;height:52px;background:rgba(255,255,255,.72);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid rgba(0,0,0,.08);display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:2000;transition:background .3s}
+    .nav-brand{display:flex;align-items:center;gap:8px}
+    .nav-mark{width:30px;height:30px;background:var(--dark);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
+    .nav-mark:hover{transform:rotate(10deg) scale(1.12)}
+    .nav-name{font-size:15px;font-weight:700;letter-spacing:-.4px}
+    .nav-links{display:flex;gap:2px;list-style:none}
+    .nav-links a{padding:6px 14px;font-size:13px;color:var(--mid);border-radius:8px;font-weight:500;transition:all .2s}
+    .nav-links a:hover{color:var(--dark);background:var(--bg2)}
+    .nav-right{display:flex;align-items:center;gap:8px}
+    .nav-clock{font-family:var(--m);font-size:12px;color:var(--light);min-width:44px;letter-spacing:.02em}
+    .lang-toggle{display:flex;gap:1px;background:var(--bg2);border-radius:8px;padding:2px}
+    .lang-btn{font-size:11px;font-weight:600;font-family:var(--m);padding:4px 8px;border:none;background:transparent;border-radius:6px;color:var(--mid);transition:all .15s}
+    .lang-btn.on{background:#fff;color:var(--dark);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+    .nav-search{display:flex;align-items:center;gap:5px;font-size:12px;font-family:var(--m);color:var(--mid);background:var(--bg2);border:1px solid var(--sep);border-radius:8px;padding:5px 10px;transition:all .15s}
+    .nav-search:hover{background:var(--bg3)}
+    .nav-cta{font-size:13px;font-weight:600;padding:7px 16px;background:var(--dark);color:#fff;border-radius:980px;transition:all .2s;border:none}
+    .nav-cta:hover{background:#000;transform:scale(1.02)}
+    .nav-burger{display:none;flex-direction:column;gap:4px;background:none;border:none;padding:4px}
+    .nav-burger span{display:block;width:18px;height:1.5px;background:var(--dark);border-radius:2px;transition:all .3s}
+    .nav-burger.open span:nth-child(1){transform:translateY(5.5px) rotate(45deg)}
+    .nav-burger.open span:nth-child(2){opacity:0}
+    .nav-burger.open span:nth-child(3){transform:translateY(-5.5px) rotate(-45deg)}
+    .mob-menu{position:fixed;top:52px;left:0;right:0;background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--sep);padding:10px 16px;display:flex;flex-direction:column;gap:2px;z-index:1900;transform:translateY(-110%);transition:transform .3s cubic-bezier(.16,1,.3,1)}
+    .mob-menu.open{transform:none}
+    .mob-menu a{font-size:15px;font-weight:500;color:var(--dark);padding:10px 4px;border-bottom:1px solid var(--sep)}
+
+    /* ─── SPOTLIGHT ─── */
+    .spotlight-bg{position:fixed;inset:0;background:rgba(0,0,0,.3);backdrop-filter:blur(8px);z-index:5000;display:flex;align-items:flex-start;justify-content:center;padding-top:80px;opacity:0;pointer-events:none;transition:opacity .2s}
+    .spotlight-bg.open{opacity:1;pointer-events:all}
+    .spotlight-box{background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border-radius:16px;width:560px;max-width:90vw;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.6)}
+    .sp-row{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--sep)}
+    .sp-input{flex:1;border:none;background:transparent;font-size:16px;outline:none;color:var(--dark);font-family:var(--f)}
+    .sp-esc{font-size:11px;font-family:var(--m);color:var(--light);background:var(--bg2);padding:2px 7px;border-radius:5px;border:1px solid var(--sep)}
+    .sp-list{padding:8px}
+    .sp-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;transition:background .12s}
+    .sp-item:hover,.sp-item.sel{background:var(--bg2)}
+    .sp-item-icon{width:32px;height:32px;background:var(--dark);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .sp-item-n{font-size:14px;font-weight:500}
+    .sp-item-s{font-size:12px;color:var(--mid)}
+    .sp-footer{display:flex;gap:16px;padding:10px 18px;border-top:1px solid var(--sep);background:var(--bg2)}
+    .sp-hint{font-size:11px;font-family:var(--m);color:var(--light);display:flex;align-items:center;gap:5px}
+    .sp-hint kbd{background:var(--bg);border:1px solid var(--sep2);border-radius:4px;padding:1px 5px}
+
+    /* ─── HERO ─── */
+    .hero{min-height:100svh;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:60px;padding-top:52px}
+    .hero-content{padding:80px 0 60px}
+    .hero-avail{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:500;color:var(--mid);background:var(--bg2);border:1px solid var(--sep);border-radius:980px;padding:5px 12px;margin-bottom:24px;font-family:var(--m);letter-spacing:.02em}
+    .pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulseGreen 2s ease-in-out infinite}
+    @keyframes pulseGreen{0%,100%{box-shadow:0 0 0 0 rgba(48,209,88,.5)}50%{box-shadow:0 0 0 4px rgba(48,209,88,0)}}
+    .hero-h1{margin-bottom:20px}
+    .hero-sub{font-size:17px;color:var(--mid);max-width:420px;line-height:1.65;margin-bottom:32px;font-weight:400}
+    .hero-btns{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:48px}
+    .btn-fill{display:inline-flex;align-items:center;gap:7px;padding:11px 22px;border-radius:980px;font-size:14px;font-weight:600;transition:all .2s;border:none}
+    .btn-blue{background:var(--blue);color:#fff}
+    .btn-blue:hover{background:var(--blue2);transform:scale(1.02)}
+    .btn-outline{display:inline-flex;align-items:center;gap:7px;padding:11px 22px;border-radius:980px;font-size:14px;font-weight:600;border:1.5px solid var(--sep2);color:var(--dark);transition:all .2s}
+    .btn-outline:hover{border-color:var(--dark);transform:scale(1.02)}
+    .hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--sep);border-radius:14px;overflow:hidden;border:1px solid var(--sep)}
+    .stat-item{background:var(--bg);padding:16px 12px;text-align:center}
+    .stat-n{font-family:var(--fd);font-size:22px;font-weight:700;letter-spacing:-1px}
+    .stat-l{font-size:11px;color:var(--mid);margin-top:3px;font-weight:500}
+
+    /* Hero Visual - Pure SVG (no broken images) */
+    .hero-visual{opacity:0;animation:popIn .8s .4s ease forwards}
+    @keyframes popIn{from{opacity:0;transform:scale(.95) translateY(20px)}to{opacity:1;transform:none}}
+    .hero-svg-wrap{position:relative;width:100%;max-width:500px;margin:0 auto}
+    .hero-device{background:linear-gradient(145deg,#f5f5f7,#e8e8ed);border-radius:28px;padding:3px;box-shadow:var(--sh3);border:1px solid rgba(0,0,0,.08)}
+    .hero-screen{background:#0d0d14;border-radius:25px;overflow:hidden;aspect-ratio:4/3;position:relative}
+    .hero-term-bar{height:36px;background:#181825;display:flex;align-items:center;padding:0 14px;gap:6px;border-bottom:1px solid rgba(255,255,255,.04)}
+    .hero-dots{display:flex;gap:6px}
+    .hero-dot{width:10px;height:10px;border-radius:50%}
+    .hero-term-title{flex:1;text-align:center;font-size:10px;color:rgba(255,255,255,.25);font-family:var(--m)}
+    .hero-term-body{padding:20px;font-family:var(--m);font-size:12px;line-height:1.8;color:#cdd6f4;height:calc(100% - 36px);overflow:hidden}
+    .ht-line{display:flex;gap:8px;align-items:flex-start}
+    .ht-prompt{color:#6c7086}
+    .ht-cmd{color:#cdd6f4}
+    .ht-out{color:#a6e3a1}
+    .ht-warn{color:#f38ba8}
+    .ht-info{color:#89b4fa}
+    .ht-cursor{display:inline-block;width:6px;height:12px;background:#cdd6f4;border-radius:1px;animation:blink .9s step-end infinite;margin-left:2px}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+    /* Status badge */
+    .hero-badge{position:absolute;bottom:20px;left:20px;background:rgba(0,0,0,.75);color:#fff;padding:9px 14px;border-radius:12px;font-family:var(--m);font-size:10px;border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(12px);display:flex;align-items:center;gap:7px}
+    .hero-badge-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulseGreen 2s ease-in-out infinite}
+    .hero-float{position:absolute;top:20px;right:-20px;background:#fff;border-radius:12px;padding:10px 14px;box-shadow:var(--sh2);border:1px solid var(--sep);font-size:11px;font-family:var(--m);display:flex;align-items:center;gap:8px;animation:float 3s ease-in-out infinite}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+    /* ─── SERVICES ─── */
+    .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .svc-card{background:var(--bg2);border-radius:var(--r);padding:26px;border:1px solid transparent;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s,transform .35s cubic-bezier(.16,1,.3,1)}
+    .svc-card:hover{border-color:var(--sep2);box-shadow:var(--sh2);transform:translateY(-3px) rotate(-.2deg)}
+    .svc-card.span2{grid-column:span 2}
+    .svc-card.tall{grid-row:span 2}
+    .svc-icon{width:40px;height:40px;border-radius:11px;background:var(--bg);display:flex;align-items:center;justify-content:center;margin-bottom:14px;box-shadow:var(--sh);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+    .svc-card:hover .svc-icon{transform:rotate(-8deg) scale(1.15)}
+    .svc-icon svg{color:var(--blue)}
+    .svc-card h3{font-size:16px;font-weight:600;letter-spacing:-.3px;margin-bottom:6px}
+    .svc-card p{font-size:13px;color:var(--mid);line-height:1.6}
+    .svc-link{display:inline-flex;align-items:center;gap:4px;margin-top:12px;font-size:13px;font-weight:500;color:var(--blue);opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s}
+    .svc-card:hover .svc-link{opacity:1;transform:none}
+    .svc-n{font-size:52px;font-weight:800;letter-spacing:-3px;color:rgba(0,0,0,.03);position:absolute;bottom:-6px;right:12px;line-height:1;font-family:var(--m)}
+    .svc-checks{margin-top:16px;padding:12px 14px;background:var(--bg);border-radius:10px;border:1px solid var(--sep)}
+    .svc-checks-title{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--light);font-family:var(--m);margin-bottom:8px}
+    .svc-check{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--mid);padding:4px 0;border-bottom:1px solid var(--sep)}
+    .svc-check:last-child{border-bottom:none}
+    .svc-check-dot{width:14px;height:14px;border-radius:50%;background:rgba(48,209,88,.12);border:1.5px solid rgba(48,209,88,.3);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+    .svc-check-dot::after{content:'✓';font-size:8px;color:var(--green)}
+    .svc-illus{margin:14px 0 2px;display:flex;justify-content:center}
+
+    /* ─── PORTFOLIO ─── */
+    .portfolio-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .port-card{background:#0a0a0f;border-radius:var(--r);overflow:hidden;border:1px solid rgba(255,255,255,.06);transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s}
+    .port-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+    .port-card.full{grid-column:span 2}
+    .pc-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.05)}
+    .pc-badges{display:flex;gap:5px;flex-wrap:wrap}
+    .pc-badge{font-size:10px;font-family:var(--m);color:rgba(255,255,255,.3);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);padding:2px 8px;border-radius:5px}
+    .pc-status{display:flex;align-items:center;gap:4px;font-size:10px;font-family:var(--m);color:rgba(255,255,255,.3)}
+    .pc-dot-live{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+    .pc-body{padding:18px}
+    .pc-footer{padding:12px 18px;border-top:1px solid rgba(255,255,255,.05);display:flex;align-items:center;justify-content:space-between}
+    .pc-title{font-size:13px;font-weight:600;color:rgba(255,255,255,.8)}
+    .pc-sub{font-size:10px;font-family:var(--m);color:rgba(255,255,255,.25);margin-top:1px}
+    .vuln-table{width:100%;border-collapse:collapse;font-family:var(--m);font-size:11px}
+    .vuln-table th{font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.2);padding:0 0 8px;text-align:left}
+    .vuln-table td{padding:7px 0;border-top:1px solid rgba(255,255,255,.04);color:rgba(255,255,255,.55);vertical-align:middle}
+    .vuln-table td:last-child{text-align:right}
+    .sev{font-size:9.5px;padding:2px 7px;border-radius:4px;font-weight:600}
+    .sev-crit{background:rgba(255,69,58,.15);color:#ff6b61;border:1px solid rgba(255,69,58,.22)}
+    .sev-high{background:rgba(255,159,10,.12);color:#ffc84a;border:1px solid rgba(255,159,10,.2)}
+    .sev-med{background:rgba(48,209,88,.1);color:#4cd974;border:1px solid rgba(48,209,88,.18)}
+    .pc-chips{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.05)}
+    .pc-chip{flex:1;text-align:center;padding:7px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:8px}
+    .pc-chip-n{font-family:var(--fd);font-size:15px;font-weight:700;color:rgba(255,255,255,.7)}
+    .pc-chip-l{font-family:var(--m);font-size:9px;color:rgba(255,255,255,.22);margin-top:1px}
+    .api-endpoints{display:flex;flex-direction:column;gap:3px}
+    .ep{display:flex;align-items:center;gap:8px;padding:6px 9px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:7px;font-family:var(--m);font-size:10.5px}
+    .method{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;flex-shrink:0}
+    .m-get{background:rgba(48,209,88,.13);color:#4cd974}
+    .m-post{background:rgba(0,113,227,.13);color:#89b4fa}
+    .m-put{background:rgba(255,159,10,.13);color:#ffc84a}
+    .m-del{background:rgba(255,69,58,.13);color:#ff6b61}
+    .ep-path{flex:1;color:rgba(255,255,255,.45)}
+    .ep-code{color:rgba(255,255,255,.25);font-size:9.5px}
+    .ep-ms{color:rgba(48,209,88,.7);font-size:9.5px;min-width:28px;text-align:right}
+    .pipe-flow{display:flex;flex-direction:column;gap:7px}
+    .pipe-step-card{display:flex;align-items:center;gap:9px;padding:9px 11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px}
+    .pipe-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .pipe-text{flex:1}
+    .pipe-name{font-size:11.5px;font-family:var(--m);color:rgba(255,255,255,.65);font-weight:500}
+    .pipe-detail{font-size:9.5px;font-family:var(--m);color:rgba(255,255,255,.25);margin-top:1px}
+    .pipe-badge{font-size:9px;padding:2px 7px;border-radius:4px;font-family:var(--m);font-weight:600}
+    .pipe-connector{display:flex;justify-content:center;padding:1px 0}
+    .pipe-connector-track{width:1.5px;height:18px;background:rgba(255,255,255,.05);border-radius:1px;position:relative;overflow:hidden}
+    .pipe-connector-track::after{content:'';position:absolute;top:-100%;left:0;right:0;height:100%;background:linear-gradient(to bottom,transparent,rgba(48,209,88,.8),transparent);animation:pipeFlow 2s ease-in-out infinite}
+    @keyframes pipeFlow{0%{top:-100%}100%{top:100%}}
+    .pipe-result{margin-top:10px;padding:9px 11px;background:rgba(48,209,88,.05);border:1px solid rgba(48,209,88,.12);border-radius:9px;font-size:10.5px;font-family:var(--m);color:rgba(255,255,255,.4)}
+    .report-card{background:var(--bg2);border-radius:var(--r);padding:32px;border:1px solid var(--sep);margin-bottom:14px}
+    .p-table{width:100%;border-collapse:collapse;font-family:var(--m);font-size:12px;margin-top:24px}
+    .p-table th{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--light);padding:0 0 10px;text-align:left;font-weight:600}
+    .p-table td{padding:10px 0;border-top:1px solid var(--sep);color:var(--mid);vertical-align:middle}
+    .p-table td:last-child{text-align:right}
+    .tag-pill{font-size:10px;padding:3px 9px;border-radius:5px;font-weight:600}
+    .t-crit{background:rgba(255,69,58,.08);color:var(--red)}
+    .t-done{background:rgba(48,209,88,.08);color:var(--green)}
+    .chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+    .chart-box{background:var(--bg2);border-radius:var(--r);padding:32px;border:1px solid var(--sep)}
+    .bar-wrap{display:flex;gap:8px;align-items:flex-end;height:80px;margin-top:20px}
+    .bar{flex:1;background:var(--bg3);border-radius:4px;overflow:hidden;position:relative}
+    .bar-fill{width:100%;background:linear-gradient(to top,var(--blue),rgba(0,113,227,.4));border-radius:4px;transition:height 1.2s cubic-bezier(.16,1,.3,1);height:0}
+
+    /* ─── DARK SECTION ─── */
+    .net-section{background:#0a0a0f;padding:120px 0;position:relative;overflow:hidden}
+    .net-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 50%,rgba(0,113,227,.05) 0%,transparent 70%)}
+    .net-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+    .net-text .eyebrow{color:#5ac8fa}
+    .net-text .eyebrow::before{background:#5ac8fa}
+    .net-text .h2{color:#fff}
+    .net-text .body-lg{color:rgba(255,255,255,.4)}
+    .net-list{margin-top:24px;display:flex;flex-direction:column;gap:8px}
+    .net-li{display:flex;align-items:center;gap:9px;font-size:14px;color:rgba(255,255,255,.45)}
+    .net-li::before{content:'';width:5px;height:5px;border-radius:50%;background:#0071e3;flex-shrink:0}
+    .net-btns{margin-top:32px;display:flex;gap:10px}
+    .btn-white{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:980px;font-size:13px;font-weight:600;background:#fff;color:var(--dark);transition:all .2s}
+    .btn-white:hover{transform:scale(1.02)}
+    .btn-ghost-white{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:980px;font-size:13px;font-weight:500;color:#fff;transition:all .2s}
+    .btn-ghost-white:hover{background:rgba(255,255,255,.15)}
+
+    /* ─── TERMINAL ─── */
+    .terminal-section{padding:120px 0;background:var(--bg2)}
+    .term-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .term-outer{border-radius:14px;overflow:hidden;box-shadow:var(--sh3)}
+    .term-bar2{display:flex;align-items:center;gap:6px;padding:9px 14px;background:#181825;border-bottom:1px solid rgba(255,255,255,.05)}
+    .term-dots{display:flex;gap:5px}
+    .tdot{width:10px;height:10px;border-radius:50%}
+    .term-title-label{flex:1;text-align:center;font-family:var(--m);font-size:11px;color:rgba(255,255,255,.25)}
+    .term-body2{background:#1e1e2e;padding:14px 18px;font-family:var(--m);font-size:12px;line-height:1.9;min-height:180px;max-height:240px;overflow:hidden;color:#cdd6f4}
+    .tp-row{display:flex;gap:7px;align-items:flex-start}
+    .tp-prompt{color:#6c7086;flex-shrink:0}
+    .tp-cmd{color:#cdd6f4}
+    .tp-out{color:#a6e3a1}
+    .tp-err{color:#f38ba8}
+    .tp-info{color:#89b4fa}
+    .cursor-blink{display:inline-block;width:6px;height:12px;background:#cdd6f4;border-radius:1px;margin-left:2px;animation:blink .9s step-end infinite}
+    .term-stats{margin-top:14px;background:var(--bg);border-radius:14px;padding:16px 22px;display:flex;border:1px solid var(--sep)}
+    .term-stat{flex:1;text-align:center;padding:0 14px}
+    .term-stat-sep{border-left:1px solid var(--sep)}
+    .term-stat-n{font-family:var(--m);font-size:19px;font-weight:700;color:var(--dark)}
+    .term-stat-l{font-family:var(--m);font-size:10px;color:var(--light);margin-top:2px;letter-spacing:.04em}
+    .term-body2::-webkit-scrollbar{width:3px}
+    .term-body2::-webkit-scrollbar-track{background:transparent}
+    .term-body2::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:2px}
+
+    /* ─── STACK SECTION — NEW INTERACTIVE ─── */
+    .stack-section-new{padding:120px 0;background:#07070f;position:relative;overflow:hidden}
+    .stack-section-new::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,113,227,.6),transparent)}
+    .stack-section-new::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(0,113,227,.05) 0%,transparent 70%);pointer-events:none}
+    .stack-section-new .eyebrow{color:#5ac8fa}
+    .stack-section-new .eyebrow::before{background:#5ac8fa}
+    .stack-section-new .h2{color:#fff}
+    .stack-section-new .body-lg{color:rgba(255,255,255,.4)}
+
+    /* Language pill grid */
+    .lang-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:48px}
+    .lang-pill{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);cursor:pointer;transition:all .22s cubic-bezier(.16,1,.3,1);font-family:var(--m);font-size:12.5px;font-weight:600;color:rgba(255,255,255,.45);position:relative;overflow:hidden;backdrop-filter:blur(8px)}
+    .lang-pill::before{content:'';position:absolute;inset:0;background:var(--pill-color,var(--blue));opacity:0;transition:opacity .25s}
+    .lang-pill-dot{width:6px;height:6px;border-radius:50%;background:var(--pill-color,var(--blue));flex-shrink:0;opacity:0;transform:scale(0);transition:all .22s cubic-bezier(.34,1.56,.64,1)}
+    .lang-pill:hover{border-color:rgba(255,255,255,.18);color:rgba(255,255,255,.75);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+    .lang-pill:hover::before{opacity:.05}
+    .lang-pill:hover .lang-pill-dot{opacity:1;transform:scale(1)}
+    .lang-pill.active{border-color:var(--pill-color,var(--blue));color:#fff;box-shadow:0 0 0 1px var(--pill-color,var(--blue)),0 8px 32px rgba(0,0,0,.4)}
+    .lang-pill.active::before{opacity:.1}
+    .lang-pill.active .lang-pill-dot{opacity:1;transform:scale(1.3)}
+    .lang-pill-name{position:relative;z-index:1}
+
+    /* Expandable panel below pills */
+    .lang-panel-wrap{overflow:hidden;max-height:0;transition:max-height .6s cubic-bezier(.16,1,.3,1),opacity .4s ease,margin-top .4s ease;opacity:0;margin-top:0;position:relative;z-index:1}
+    .lang-panel-wrap.open{max-height:540px;opacity:1;margin-top:24px}
+    .lang-panel{display:grid;grid-template-columns:260px 1fr;gap:0;position:relative;background:rgba(12,12,22,.7);backdrop-filter:blur(40px) saturate(160%);-webkit-backdrop-filter:blur(40px) saturate(160%);border-radius:20px;border:1px solid rgba(255,255,255,.06);overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06)}
+
+    /* Left: info */
+    .lp-info{padding:28px 24px;border-right:1px solid rgba(255,255,255,.05);display:flex;flex-direction:column;gap:0;background:rgba(255,255,255,.02)}
+    .lp-badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--m);font-size:9.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:5px 10px;border-radius:7px;width:fit-content}
+    .lp-badge-dot{width:5px;height:5px;border-radius:50%;background:var(--lp-color,var(--blue));animation:pulseGreen 2s ease-in-out infinite}
+    .lp-name{font-size:24px;font-weight:800;letter-spacing:-.8px;margin-bottom:8px;color:#fff}
+    .lp-desc{font-size:13px;color:rgba(255,255,255,.4);line-height:1.65;flex:1}
+    .lp-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:16px}
+    .lp-tag{font-size:10px;font-family:var(--m);color:rgba(255,255,255,.3);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);padding:3px 9px;border-radius:6px}
+
+    /* Right: terminal */
+    .lp-term{background:rgba(8,8,18,.6);display:flex;flex-direction:column}
+    .lp-term-bar{height:38px;background:rgba(0,0,0,.4);display:flex;align-items:center;padding:0 14px;gap:6px;border-bottom:1px solid rgba(255,255,255,.04);flex-shrink:0}
+    .lp-dots{display:flex;gap:5px}
+    .lp-dot{width:9px;height:9px;border-radius:50%}
+    .lp-term-title{flex:1;text-align:center;font-family:var(--m);font-size:10px;color:rgba(255,255,255,.2)}
+    .lp-term-body{padding:20px 22px;font-family:var(--m);font-size:12.5px;line-height:1.85;color:#cdd6f4;flex:1;min-height:260px;position:relative}
+    .lp-term-body .c-prompt{color:#6c7086}
+    .lp-term-body .c-cmd{color:#cdd6f4}
+    .lp-term-body .c-kw{color:#cba6f7}
+    .lp-term-body .c-str{color:#a6e3a1}
+    .lp-term-body .c-cmt{color:#6c7086;font-style:italic}
+    .lp-term-body .c-num{color:#fab387}
+    .lp-term-body .c-fn{color:#89b4fa}
+    .lp-term-body .c-type{color:#f9e2af}
+    .lp-cursor{display:inline-block;width:6px;height:13px;background:#cdd6f4;border-radius:1px;animation:blink .9s step-end infinite;vertical-align:text-bottom;margin-left:1px}
+
+    /* Ticker belt */
+    .stack-ticker{margin-top:40px;overflow:hidden;position:relative}
+    .stack-ticker::before,.stack-ticker::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none}
+    .stack-ticker::before{left:0;background:linear-gradient(90deg,#07070f,transparent)}
+    .stack-ticker::after{right:0;background:linear-gradient(-90deg,#07070f,transparent)}
+    .stack-ticker-inner{display:flex;gap:8px;animation:tickerScroll 22s linear infinite;width:max-content}
+    @keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    .stack-ticker-item{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:6px 14px;font-size:11px;font-weight:600;font-family:var(--m);white-space:nowrap;color:rgba(255,255,255,.3);display:flex;align-items:center;gap:6px}
+    .stack-ticker-item::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--blue);opacity:.6}
+
+    @media(max-width:900px){
+      .lang-panel{grid-template-columns:1fr}
+      .lp-info{border-right:none;border-bottom:1px solid rgba(255,255,255,.05)}
+    }
+
+    /* Lang panel glass entrance */
+    @keyframes panelIn{
+      from{opacity:0;transform:translateY(-12px) scale(.98);filter:blur(4px)}
+      to{opacity:1;transform:none;filter:blur(0)}
+    }
+    .lang-panel-wrap.open .lang-panel{animation:panelIn .45s cubic-bezier(.16,1,.3,1) forwards}
+
+    /* Glass shimmer on panel top edge */
+    .lang-panel::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);pointer-events:none;z-index:2}
+
+    /* Active pill glow pulse */
+    @keyframes pillGlow{
+      0%,100%{box-shadow:0 0 0 1px var(--pill-color,var(--blue)),0 8px 32px rgba(0,0,0,.4)}
+      50%{box-shadow:0 0 0 1px var(--pill-color,var(--blue)),0 0 20px rgba(0,113,227,.25),0 8px 32px rgba(0,0,0,.4)}
+    }
+    .lang-pill.active{animation:pillGlow 3s ease-in-out infinite}
+
+    /* ─── TEAM ─── */
+    .team-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .team-card{background:var(--bg2);border-radius:var(--r);padding:26px;border:1px solid transparent;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s,transform .35s cubic-bezier(.16,1,.3,1)}
+    .team-card:hover{border-color:var(--sep2);box-shadow:var(--sh2);transform:translateY(-3px)}
+    .team-glow{position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;filter:blur(50px);pointer-events:none}
+    .team-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+    .team-av{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:#fff;flex-shrink:0}
+    .team-av-blue{background:linear-gradient(135deg,#003d99,var(--blue))}
+    .team-av-green{background:linear-gradient(135deg,#0a5c2f,var(--green))}
+    .team-name{font-size:17px;font-weight:700;letter-spacing:-.4px}
+    .team-role{font-size:11px;font-family:var(--m);margin-top:2px;color:var(--mid)}
+    .team-bio{font-size:13px;color:var(--mid);line-height:1.65;margin-bottom:18px}
+    .sk-row{display:flex;align-items:center;gap:7px;margin-bottom:8px}
+    .sk-label{font-size:11px;font-family:var(--m);color:var(--mid);width:68px;flex-shrink:0}
+    .sk-track{flex:1;height:3px;background:var(--bg3);border-radius:2px;overflow:hidden}
+    .sk-fill{height:100%;border-radius:2px;width:0;transition:width 1.4s cubic-bezier(.16,1,.3,1)}
+    .sk-val{font-size:11px;font-family:var(--m);color:var(--light);min-width:26px;text-align:right}
+    .team-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:14px}
+    .tag{font-size:11px;font-family:var(--m);color:var(--mid);background:var(--bg);border:1px solid var(--sep2);padding:3px 9px;border-radius:980px}
+
+    /* ─── PROCESS ─── */
+    .process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:48px}
+    .proc-card{background:var(--bg2);border-radius:var(--r);padding:22px;border:1px solid transparent;transition:all .3s}
+    .proc-card:hover{border-color:var(--sep2);box-shadow:var(--sh)}
+    .proc-num{font-family:var(--m);font-size:10.5px;color:var(--blue);font-weight:600;letter-spacing:.04em;margin-bottom:14px}
+    .proc-icon{width:36px;height:36px;border-radius:10px;background:var(--bg);display:flex;align-items:center;justify-content:center;margin-bottom:12px;box-shadow:var(--sh)}
+    .proc-icon svg{color:var(--blue)}
+    .proc-title{font-size:15px;font-weight:600;letter-spacing:-.2px;margin-bottom:7px}
+    .proc-desc{font-size:12.5px;color:var(--mid);line-height:1.6}
+
+    /* ─── REVIEWS / iMESSAGE ─── */
+    .imsg-wrap{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:start}
+    .imsg-tabs{display:flex;flex-direction:column;gap:6px}
+    .imsg-tab{padding:9px 16px;background:var(--bg2);border:1px solid var(--sep);border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;transition:all .18s;color:var(--mid);text-align:left;white-space:nowrap}
+    .imsg-tab:hover{background:var(--bg3)}
+    .imsg-tab.active{background:var(--dark);color:#fff;border-color:var(--dark)}
+    .phone-shell{background:#fff;border-radius:28px;overflow:hidden;box-shadow:var(--sh3),0 0 0 1px rgba(0,0,0,.05);max-width:340px;border:1.5px solid rgba(0,0,0,.06)}
+    .iph-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 4px;background:rgba(242,242,247,.98);font-family:var(--m);font-size:13px;font-weight:600}
+    .iph-icons{display:flex;align-items:center;gap:5px;color:var(--dark)}
+    .iph-nav{background:rgba(242,242,247,.98);border-bottom:1px solid rgba(0,0,0,.06);padding:0 12px}
+    .iph-nav-row{display:flex;align-items:center;justify-content:space-between;height:44px}
+    .iph-back{display:flex;align-items:center;gap:3px;color:var(--blue);font-size:15px}
+    .iph-contact-center{display:flex;flex-direction:column;align-items:center}
+    .iph-av-sm{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff}
+    .iph-nm-sm{font-size:10.5px;color:var(--dark);font-weight:500;margin-top:1px}
+    .iph-info{background:rgba(242,242,247,.98);display:flex;flex-direction:column;align-items:center;padding:7px 0 12px;border-bottom:1px solid rgba(0,0,0,.06)}
+    .iph-av-lg{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:700;color:#fff}
+    .iph-nm-lg{font-size:14px;font-weight:600;margin-top:4px}
+    .iph-sub-text{font-size:11px;color:var(--mid);margin-top:2px}
+    .iph-chat{background:#fff;padding:10px 12px;min-height:200px;max-height:240px;overflow-y:auto;display:flex;flex-direction:column;gap:7px}
+    .iph-date{text-align:center;font-size:10px;color:var(--light);font-family:var(--m);margin:3px 0 6px}
+    .chat-row{display:flex;align-items:flex-end;gap:5px;opacity:0;transform:translateY(7px);transition:opacity .3s,transform .3s}
+    .chat-row.show{opacity:1;transform:none}
+    .chat-row.sent{flex-direction:row-reverse}
+    .bubble{max-width:190px;padding:8px 12px;border-radius:17px;font-size:13px;line-height:1.45;word-break:break-word}
+    .bubble.recv{background:#e9e9eb;color:#000;border-bottom-left-radius:3px}
+    .bubble.sent{background:var(--blue);color:#fff;border-bottom-right-radius:3px}
+    .iph-input-row{display:flex;align-items:center;gap:7px;padding:7px 10px 10px;background:#fff;border-top:1px solid rgba(0,0,0,.06)}
+    .iph-btn-sm{width:28px;height:28px;border-radius:50%;background:var(--bg2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--mid);flex-shrink:0}
+    .iph-pill-input{flex:1;background:var(--bg2);border-radius:980px;padding:6px 12px;font-size:13px;color:var(--light);border:1px solid var(--sep2)}
+    .iph-send{width:28px;height:28px;border-radius:50%;background:var(--blue);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+
+    /* ─── CONTACT ─── */
+    .contact-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+    .contact-methods{margin-top:20px;display:flex;flex-direction:column;gap:8px}
+    .contact-link{display:flex;align-items:center;gap:12px;padding:13px 16px;background:var(--bg2);border-radius:12px;border:1px solid transparent;font-size:13.5px;font-weight:500;transition:all .22s cubic-bezier(.16,1,.3,1)}
+    .contact-link:hover{border-color:var(--sep2);box-shadow:var(--sh);transform:translateX(3px)}
+    .cl-icon{width:34px;height:34px;border-radius:9px;background:var(--bg);display:flex;align-items:center;justify-content:center;box-shadow:var(--sh);flex-shrink:0}
+    .contact-note{margin-top:20px;padding:14px 16px;background:rgba(48,209,88,.05);border-radius:11px;border:1px solid rgba(48,209,88,.12)}
+    .cn-avail{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#1d8348;font-family:var(--m);margin-bottom:4px}
+    .cp-phone{background:#fff;border-radius:26px;overflow:hidden;box-shadow:var(--sh3),0 0 0 1px rgba(0,0,0,.05);border:1.5px solid rgba(0,0,0,.06)}
+    .cp-input-row{display:flex;align-items:center;gap:7px;padding:7px 10px 10px;background:#fff;border-top:1px solid rgba(0,0,0,.06)}
+    .cp-field{flex:1;background:var(--bg2);border-radius:980px;border:1px solid var(--sep2);padding:7px 14px;font-size:13px;font-family:var(--f);outline:none;color:var(--dark)}
+    .cp-field:focus{border-color:var(--blue)}
+    .cp-send{width:30px;height:30px;border-radius:50%;background:var(--blue);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;transition:all .18s}
+    .cp-send:hover{background:#0058b0;transform:scale(1.08)}
+    .cp-send:disabled{background:var(--bg3);cursor:not-allowed;transform:none}
+
+    /* ─── CTA ─── */
+    .cta-section{background:var(--dark);padding:96px 0;text-align:center;position:relative;overflow:hidden}
+    .cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 100% at 50% 50%,rgba(0,113,227,.12) 0%,transparent 70%)}
+    .cta-section .h2{color:#fff;position:relative}
+    .cta-section p{color:rgba(255,255,255,.45);font-size:17px;margin-top:12px;position:relative}
+    .cta-btns{display:flex;justify-content:center;gap:12px;margin-top:28px;position:relative}
+
+    /* ─── FAQ ─── */
+    .faq-list{margin-top:36px;display:flex;flex-direction:column;gap:7px;max-width:640px}
+    .faq-item{border:1px solid var(--sep2);border-radius:var(--rs);overflow:hidden;transition:border-color .2s}
+    .faq-item.open{border-color:rgba(0,113,227,.25)}
+    .faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;padding:15px 18px;font-size:14px;font-weight:500;background:transparent;border:none;cursor:pointer;font-family:var(--f);text-align:left;transition:background .15s;gap:10px}
+    .faq-q:hover{background:var(--bg2)}
+    .faq-arr{width:20px;height:20px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .3s cubic-bezier(.16,1,.3,1),background .15s}
+    .faq-item.open .faq-arr{transform:rotate(45deg);background:var(--blue)}
+    .faq-item.open .faq-arr svg{color:#fff}
+    .faq-arr svg{color:var(--mid);transition:color .15s}
+    .faq-a{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.16,1,.3,1)}
+    .faq-item.open .faq-a{max-height:200px}
+    .faq-a-inner{padding:0 18px 15px;font-size:13.5px;color:var(--mid);line-height:1.7}
+
+    /* ─── FOOTER ─── */
+    footer{padding:36px 0;border-top:1px solid var(--sep)}
+    .foot-row{display:flex;align-items:center;justify-content:space-between}
+    .foot-logo{font-size:16px;font-weight:700;letter-spacing:-.4px}
+    .foot-links{display:flex;gap:18px}
+    .foot-links a{font-size:12.5px;color:var(--mid);transition:color .15s}
+    .foot-links a:hover{color:var(--dark)}
+    .foot-copy{font-size:11.5px;color:var(--light);font-family:var(--m)}
+
+    /* ─── DIVIDER ─── */
+    .divider{height:1px;background:var(--sep)}
+
+    /* ─── BODY SM ─── */
+    .body-sm{font-size:13px;color:var(--mid);line-height:1.65}
+    .iph-time{font-size:11px;font-family:var(--m);color:rgba(0,0,0,.3);margin-left:auto}
+
+    /* ─── RESPONSIVE ─── */
+    @media(max-width:900px){
+      .hero{grid-template-columns:1fr;padding-bottom:40px}
+      .hero-visual{display:none}
+      .services-grid{grid-template-columns:1fr}
+      .svc-card.span2,.svc-card.tall{grid-column:span 1;grid-row:span 1}
+      .portfolio-grid{grid-template-columns:1fr}
+      .port-card.full{grid-column:span 1}
+      .net-grid{grid-template-columns:1fr;gap:40px}
+      .team-grid{grid-template-columns:1fr}
+      .process-grid{grid-template-columns:1fr 1fr}
+      .imsg-wrap{grid-template-columns:1fr}
+      .imsg-tabs{flex-direction:row;flex-wrap:wrap}
+      .contact-layout{grid-template-columns:1fr}
+      .nav-links,.nav-clock,.lang-toggle,.nav-search{display:none}
+      .nav-burger{display:flex}
+      .h1{font-size:clamp(38px,11vw,60px);letter-spacing:-2px}
+      .foot-row{flex-direction:column;gap:14px;text-align:center}
+      .term-pair,.term-box{grid-template-columns:1fr}
+      .chart-grid{grid-template-columns:1fr}
+      .lang-panel{grid-template-columns:1fr}
+      .lp-info{border-right:none;border-bottom:1px solid var(--sep)}
+    }
+    @media(max-width:600px){
+      .process-grid{grid-template-columns:1fr}
+      .section{padding:80px 0}
+      .hero-content{padding:48px 0 32px}
+      .lang-pills{gap:6px}
+      .lang-pill{padding:7px 12px;font-size:12px}
+    }
+
+    /* ─── GLOBAL ENHANCEMENTS ─── */
+    ::selection{background:rgba(0,113,227,.15);color:var(--dark)}
+
+    /* Subtle grid texture on bg2 sections */
+    .section-grid-bg{background-image:linear-gradient(rgba(0,0,0,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.025) 1px,transparent 1px);background-size:32px 32px}
+
+    /* Enhanced card hover glow */
+    .svc-card::after{content:'';position:absolute;inset:0;border-radius:var(--r);opacity:0;transition:opacity .4s;pointer-events:none;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(0,113,227,.06) 0%,transparent 60%)}
+    .svc-card:hover::after{opacity:1}
+
+    /* Smooth hero terminal typing cursor */
+    @keyframes termTyping{0%,100%{border-right-color:rgba(205,214,244,.8)}50%{border-right-color:transparent}}
+
+    /* Enhanced process cards */
+    .proc-card{background:var(--bg);border-radius:var(--r);padding:22px;border:1px solid var(--sep);transition:all .35s cubic-bezier(.16,1,.3,1);position:relative;overflow:hidden}
+    .proc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--purple));opacity:0;transition:opacity .3s}
+    .proc-card:hover::before{opacity:1}
+    .proc-card:hover{border-color:rgba(0,113,227,.15);box-shadow:0 8px 32px rgba(0,113,227,.08);transform:translateY(-2px)}
+
+    /* Tag pills hover */
+    .tag:hover{background:var(--bg2);border-color:var(--blue);color:var(--dark)}
+    .tag{transition:all .15s}
+
+    /* Stat items */
+    .stat-item{transition:background .2s}
+    .stat-item:hover{background:var(--bg2)}
+
+    /* Enhanced scroll progress */
+    #progress{box-shadow:0 0 8px rgba(0,113,227,.4)}
+
+    /* Smooth section transitions */
+    .section{position:relative}
+
+    /* Portfolio cards — enhanced glow on hover */
+    .port-card::after{content:'';position:absolute;inset:0;border-radius:var(--r);opacity:0;transition:opacity .4s;pointer-events:none;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(0,113,227,.08) 0%,transparent 70%)}
+    .port-card:hover::after{opacity:1}
+
+    /* Eyebrow shimmer animation */
+    @keyframes shimmer{0%{background-position:-200px 0}100%{background-position:200px 0}}
+
+    /* ─── HERO TERMINAL ENHANCEMENTS ─── */
+    .hero-term-body{position:relative}
+    .hero-screen::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(0,113,227,.04) 0%,transparent 70%);pointer-events:none;z-index:1}
+
+    /* Ambient glow behind hero visual */
+    .hero-svg-wrap::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120%;height:120%;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(0,113,227,.07) 0%,transparent 70%);pointer-events:none;z-index:-1}
+
+    /* ─── FAQ ENHANCED ─── */
+    .faq-q{color:var(--dark)}
+    .faq-item.open .faq-q{color:var(--dark)}
+
+    /* ─── FOOTER ENHANCED ─── */
+    footer{transition:background .3s}
+
+    /* ─── CONTACT NOTE PULSE ─── */
+    .contact-note{transition:border-color .3s}
+    .contact-note:hover{border-color:rgba(48,209,88,.25)}
+
+    /* Floating badge animation boost */
+    .hero-float{transition:box-shadow .3s}
+    .hero-float:hover{box-shadow:var(--sh3)}
+
+    /* Delays */
+    .d1{transition-delay:.04s}.d2{transition-delay:.08s}.d3{transition-delay:.12s}.d4{transition-delay:.16s}.d5{transition-delay:.2s}
+    .rv.d1{transition-delay:.04s}.rv.d2{transition-delay:.08s}.rv.d3{transition-delay:.12s}.rv.d4{transition-delay:.16s}.rv.d5{transition-delay:.2s}
+  </style>
+</head>
+<body>
+  <div id="progress"></div>
+
+  <!-- SPOTLIGHT -->
+  <div class="spotlight-bg" id="spBg" onclick="if(event.target===this)closeSpotlight()">
+    <div class="spotlight-box">
+      <div class="sp-row">
+        <svg width="16" height="16" viewBox="0 0 18 18" fill="none" style="color:#8e8e93;flex-shrink:0">
+          <circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M12 12l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <input class="sp-input" id="spInput" placeholder="Search…" autocomplete="off">
+        <span class="sp-esc">Esc</span>
+      </div>
+      <div class="sp-list" id="spList"></div>
+      <div class="sp-footer">
+        <div class="sp-hint"><kbd>↑↓</kbd> navigate</div>
+        <div class="sp-hint"><kbd>↵</kbd> select</div>
+        <div class="sp-hint"><kbd>Esc</kbd> close</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <div class="nav-brand">
+      <div class="nav-mark" onclick="openSpotlight()" title="Search (⌘K)">
+        <svg width="12" height="12" viewBox="0 0 13 13" fill="none">
+          <path d="M1.5 11L6.5 1.5l5 9.5M3.5 7.5h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <span class="nav-name">Aktron</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#services" data-i18n="nav_services">Services</a></li>
+      <li><a href="#portfolio" data-i18n="nav_work">Work</a></li>
+      <li><a href="#team" data-i18n="nav_team">Team</a></li>
+      <li><a href="#reviews" data-i18n="nav_reviews">Reviews</a></li>
+      <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
+    </ul>
+    <div class="nav-right">
+      <span class="nav-clock" id="navClock"></span>
+      <div class="lang-toggle">
+        <button class="lang-btn on" id="btnEN" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" id="btnRU" onclick="setLang('ru')">RU</button>
+      </div>
+      <button class="nav-search" onclick="openSpotlight()">
+        <svg width="10" height="10" viewBox="0 0 11 11" fill="none">
+          <circle cx="4.5" cy="4.5" r="3.5" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M7.5 7.5L10 10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <span>⌘K</span>
+      </button>
+      <a href="#contact" class="nav-cta" data-i18n="nav_cta">Start project</a>
+      <button class="nav-burger" id="burger" onclick="toggleMob()"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+  <div class="mob-menu" id="mobMenu">
+    <a href="#services" onclick="closeMob()" data-i18n="nav_services">Services</a>
+    <a href="#portfolio" onclick="closeMob()" data-i18n="nav_work">Work</a>
+    <a href="#team" onclick="closeMob()" data-i18n="nav_team">Team</a>
+    <a href="#reviews" onclick="closeMob()" data-i18n="nav_reviews">Reviews</a>
+    <a href="#contact" onclick="closeMob()" data-i18n="nav_contact">Contact</a>
+  </div>
+
+  <!-- ═══ HERO ═══ -->
+  <div class="hero wrap">
+    <div class="hero-content">
+      <div class="hero-avail"><span class="pulse-dot"></span><span data-i18n="hero_avail">Available for new projects</span></div>
+      <h1 class="h1 hero-h1">Code.<br>Secure.<br><span class="grad">Deliver.</span></h1>
+      <p class="hero-sub" data-i18n="hero_sub">Full-stack development and cybersecurity from two engineers who know what they are doing. No agencies, no fluff — just results.</p>
+      <div class="hero-btns">
+        <a href="#contact" class="btn-fill btn-blue">
+          <svg width="12" height="12" viewBox="0 0 13 13" fill="none"><path d="M2 6.5h9M7.5 2.5l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span data-i18n="hero_cta1">Start a project</span>
+        </a>
+        <a href="#portfolio" class="btn-outline" data-i18n="hero_cta2">See our work</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><div class="stat-n" data-t="40" data-s="+">0+</div><div class="stat-l" data-i18n="s_projects">projects</div></div>
+        <div class="stat-item"><div class="stat-n" data-t="98" data-s="%">0%</div><div class="stat-l" data-i18n="s_sat">satisfied</div></div>
+        <div class="stat-item"><div class="stat-n">5yr</div><div class="stat-l" data-i18n="s_exp">experience</div></div>
+        <div class="stat-item"><div class="stat-n">24h</div><div class="stat-l" data-i18n="s_resp">response</div></div>
+      </div>
+    </div>
+
+    <!-- HERO VISUAL — Pure SVG macOS Terminal (no external image) -->
+    <div class="hero-visual">
+      <div class="hero-svg-wrap">
+        <div class="hero-device">
+          <div class="hero-screen">
+            <div class="hero-term-bar">
+              <div class="hero-dots">
+                <div class="hero-dot" style="background:#ff5f56"></div>
+                <div class="hero-dot" style="background:#ffbd2e"></div>
+                <div class="hero-dot" style="background:#27c93f"></div>
+              </div>
+              <div class="hero-term-title">aktron@mac — cybersecurity</div>
+            </div>
+            <div class="hero-term-body" id="heroTermBody">
+              <div class="ht-line"><span class="ht-prompt">aktron@mac~$</span><span class="ht-cmd"> nmap -sV --script vuln target.io</span></div>
+              <div class="ht-line"><span class="ht-out">Starting Nmap 7.94 scan...</span></div>
+              <div class="ht-line"><span class="ht-info">PORT    STATE  SERVICE  VERSION</span></div>
+              <div class="ht-line"><span class="ht-out">22/tcp  open   ssh      OpenSSH 8.9</span></div>
+              <div class="ht-line"><span class="ht-out">80/tcp  open   http     nginx 1.24</span></div>
+              <div class="ht-line"><span class="ht-out">443/tcp open   https    nginx 1.24</span></div>
+              <div class="ht-line"><span class="ht-warn">VULN: CVE-2024-0001 — CRITICAL 9.8</span></div>
+              <div class="ht-line"><span class="ht-out">| ssl-heartbleed: VULNERABLE</span></div>
+              <div class="ht-line"><span class="ht-prompt">aktron@mac~$</span><span class="ht-cursor"></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-badge">
+          <div class="hero-badge-dot"></div>
+          System Integrity: 99.9%
+        </div>
+        <div class="hero-float">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1L13 5v7H1V5L7 1z" stroke="var(--blue)" stroke-width="1.3" stroke-linejoin="round"/><path d="M4 9h6M7 6v3" stroke="var(--green)" stroke-width="1.3" stroke-linecap="round"/></svg>
+          <span style="font-size:11px;font-family:var(--m);color:var(--dark)">2 vulns patched</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SERVICES ═══ -->
+  <section class="section" id="services" style="background:var(--bg2)">
+    <div class="wrap">
+      <div class="rv">
+        <div class="eyebrow" data-i18n="svc_tag">What we build</div>
+        <h2 class="h2" data-i18n="svc_title">Every kind of software.<br>All of it excellent.</h2>
+        <p class="body-lg" style="max-width:480px;margin-top:10px;margin-bottom:48px" data-i18n="svc_sub">From securing infrastructure to shipping products users love — we cover the full spectrum.</p>
+      </div>
+      <div class="services-grid rv">
+        <!-- Cybersecurity -->
+        <div class="svc-card tall d1">
+          <div class="svc-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 1.5l7 4v8L10 18l-7-4.5v-8L10 1.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M10 1.5v16M3 5.5l7 4.5 7-4.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+          <h3 data-i18n="s1_t">Cybersecurity</h3>
+          <p data-i18n="s1_d">Penetration testing, vulnerability assessments, security audits, and threat modeling for web apps, APIs, and networks.</p>
+          <div class="svc-illus">
+            <svg viewBox="0 0 160 72" width="100%" height="72" fill="none">
+              <!-- Minimal hexagon scan -->
+              <polygon points="80,12 104,25 104,51 80,64 56,51 56,25" stroke="rgba(0,113,227,.15)" stroke-width="1" fill="none"/>
+              <polygon points="80,22 97,31.5 97,50.5 80,60 63,50.5 63,31.5" stroke="rgba(0,113,227,.3)" stroke-width="1" fill="rgba(0,113,227,.03)">
+                <animate attributeName="stroke-opacity" values=".3;.7;.3" dur="2.5s" repeatCount="indefinite"/>
+              </polygon>
+              <line x1="80" y1="12" x2="80" y2="22" stroke="rgba(0,113,227,.4)" stroke-width="1"/>
+              <line x1="80" y1="60" x2="80" y2="64" stroke="rgba(0,113,227,.4)" stroke-width="1"/>
+              <line x1="104" y1="25" x2="97" y2="31.5" stroke="rgba(0,113,227,.4)" stroke-width="1"/>
+              <line x1="56" y1="25" x2="63" y2="31.5" stroke="rgba(0,113,227,.4)" stroke-width="1"/>
+              <path d="M74 38 L78 42 L87 33" stroke="#30d158" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Scan beam -->
+              <line x1="56" y1="38" x2="104" y2="38" stroke="rgba(48,209,88,.15)" stroke-width="1">
+                <animate attributeName="y1" values="25;51;25" dur="3s" repeatCount="indefinite"/>
+                <animate attributeName="y2" values="25;51;25" dur="3s" repeatCount="indefinite"/>
+              </line>
+            </svg>
+          </div>
+          <div class="svc-checks">
+            <div class="svc-checks-title" data-i18n="s1_lt">What you get</div>
+            <div class="svc-check"><div class="svc-check-dot"></div><span data-i18n="s1_c1">Full penetration test report</span></div>
+            <div class="svc-check"><div class="svc-check-dot"></div><span data-i18n="s1_c2">CVE mapping with CVSS 3.1 scores</span></div>
+            <div class="svc-check"><div class="svc-check-dot"></div><span data-i18n="s1_c3">Remediation roadmap</span></div>
+            <div class="svc-check"><div class="svc-check-dot"></div><span data-i18n="s1_c4">30-day post-audit support</span></div>
+          </div>
+          <a href="#contact" class="svc-link" data-i18n="s1_cta">Book an audit →</a>
+          <div class="svc-n">01</div>
+        </div>
+        <!-- Web Dev -->
+        <div class="svc-card d2">
+          <div class="svc-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="1" y="3" width="18" height="12" rx="2.5" stroke="currentColor" stroke-width="1.4"/><path d="M7 19h6M10 15v4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+          <h3 data-i18n="s2_t">Web Development</h3>
+          <p data-i18n="s2_d">Modern web apps, landing pages, full-stack platforms. Clean code, fast performance, responsive by default.</p>
+          <div class="svc-illus">
+            <svg viewBox="0 0 160 60" width="100%" height="60" fill="none">
+              <!-- Minimal code brackets -->
+              <path d="M38,14 L20,30 L38,46" stroke="rgba(0,113,227,.4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M122,14 L140,30 L122,46" stroke="rgba(0,113,227,.4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M96,10 L64,50" stroke="rgba(0,113,227,.2)" stroke-width="1.2" stroke-linecap="round"/>
+              <!-- Horizontal code lines -->
+              <rect x="50" y="22" width="0" height="4" rx="2" fill="rgba(0,113,227,.3)"><animate attributeName="width" values="0;42" dur="0.5s" begin="0.2s" fill="freeze"/></rect>
+              <rect x="50" y="32" width="0" height="4" rx="2" fill="rgba(48,209,88,.3)"><animate attributeName="width" values="0;28" dur="0.4s" begin="0.4s" fill="freeze"/></rect>
+              <rect x="50" y="42" width="0" height="4" rx="2" fill="rgba(0,113,227,.2)"><animate attributeName="width" values="0;35" dur="0.45s" begin="0.6s" fill="freeze"/></rect>
+            </svg>
+          </div>
+          <a href="#contact" class="svc-link" data-i18n="s2_cta">Get a quote →</a>
+          <div class="svc-n">02</div>
+        </div>
+        <!-- Custom Software -->
+        <div class="svc-card d3">
+          <div class="svc-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="4" y="1" width="12" height="18" rx="2.5" stroke="currentColor" stroke-width="1.4"/><path d="M7 7h6M7 10.5h5M7 14h6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+          <h3 data-i18n="s3_t">Custom Software</h3>
+          <p data-i18n="s3_d">CLI tools, desktop apps, automation pipelines. Whatever you need shipped, we build it right.</p>
+          <div class="svc-illus">
+            <svg viewBox="0 0 160 44" width="100%" height="44" fill="none">
+              <!-- Minimal circuit flow -->
+              <line x1="18" y1="22" x2="44" y2="22" stroke="rgba(0,113,227,.2)" stroke-width="1"/>
+              <line x1="116" y1="22" x2="142" y2="22" stroke="rgba(0,113,227,.2)" stroke-width="1"/>
+              <rect x="44" y="14" width="28" height="16" rx="4" fill="rgba(0,113,227,.05)" stroke="rgba(0,113,227,.3)" stroke-width="1"/>
+              <text x="58" y="24" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7" fill="rgba(0,113,227,.6)">IN</text>
+              <line x1="72" y1="22" x2="88" y2="22" stroke="rgba(0,113,227,.2)" stroke-width="1" stroke-dasharray="3,2"/>
+              <rect x="88" y="14" width="28" height="16" rx="4" fill="rgba(48,209,88,.05)" stroke="rgba(48,209,88,.3)" stroke-width="1"/>
+              <text x="102" y="24" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="7" fill="rgba(48,209,88,.7)">OUT</text>
+              <!-- Pulse dot -->
+              <circle r="2.5" fill="#0071e3" opacity=".9">
+                <animateMotion path="M18,22 L44,22 L44,22 L72,22 L88,22 L116,22 L142,22" dur="2s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite" keyTimes="0;.1;.85;1"/>
+              </circle>
+            </svg>
+          </div>
+          <a href="#contact" class="svc-link" data-i18n="s3_cta">Discuss scope →</a>
+          <div class="svc-n">03</div>
+        </div>
+        <!-- AI + Backend -->
+        <div class="svc-card span2 d4">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px">
+            <div>
+              <div class="svc-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="6" stroke="currentColor" stroke-width="1.4"/><circle cx="10" cy="10" r="2" fill="currentColor" opacity=".3"/><path d="M10 4V2M10 18v-2M16 10h2M2 10h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+              <h3 data-i18n="s4_t">AI Integration</h3>
+              <p data-i18n="s4_d">LLMs, ML models, and computer vision integrated into your existing products and workflows.</p>
+              <a href="#contact" class="svc-link" data-i18n="s4_cta">Explore options →</a>
+            </div>
+            <div>
+              <div class="svc-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><rect x="6" y="10" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.4"/></svg></div>
+              <h3 data-i18n="s5_t">API & Backend</h3>
+              <p data-i18n="s5_d">REST APIs, auth systems, databases — scalable backends that hold under production load.</p>
+              <a href="#contact" class="svc-link" data-i18n="s5_cta">Get started →</a>
+            </div>
+          </div>
+          <div class="svc-n">04</div>
+        </div>
+        <!-- Network Security -->
+        <div class="svc-card d5">
+          <div class="svc-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L2 7v6l8 5 8-5V7L10 2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M2 7l8 5m0 0l8-5m-8 5v5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+          <h3 data-i18n="s6_t">Network Security</h3>
+          <p data-i18n="s6_d">Network scanning, hardening, firewall configuration, intrusion detection setup.</p>
+          <div class="svc-illus">
+            <svg viewBox="0 0 160 56" width="100%" height="56" fill="none">
+              <!-- Minimal network mesh -->
+              <line x1="30" y1="28" x2="80" y2="14" stroke="rgba(0,113,227,.18)" stroke-width="1"/>
+              <line x1="30" y1="28" x2="80" y2="42" stroke="rgba(0,113,227,.18)" stroke-width="1"/>
+              <line x1="80" y1="14" x2="130" y2="28" stroke="rgba(0,113,227,.18)" stroke-width="1"/>
+              <line x1="80" y1="42" x2="130" y2="28" stroke="rgba(0,113,227,.18)" stroke-width="1"/>
+              <line x1="80" y1="14" x2="80" y2="42" stroke="rgba(0,113,227,.1)" stroke-width="1" stroke-dasharray="3,3"/>
+              <!-- Nodes -->
+              <circle cx="30" cy="28" r="6" fill="rgba(0,113,227,.08)" stroke="rgba(0,113,227,.4)" stroke-width="1"/>
+              <circle cx="80" cy="14" r="5" fill="rgba(48,209,88,.08)" stroke="rgba(48,209,88,.4)" stroke-width="1"/>
+              <circle cx="80" cy="42" r="5" fill="rgba(48,209,88,.08)" stroke="rgba(48,209,88,.4)" stroke-width="1"/>
+              <circle cx="130" cy="28" r="6" fill="rgba(0,113,227,.08)" stroke="rgba(0,113,227,.4)" stroke-width="1"><animate attributeName="stroke-opacity" values=".4;1;.4" dur="2s" repeatCount="indefinite"/></circle>
+              <!-- Packet -->
+              <circle r="2" fill="#30d158"><animateMotion path="M30,28 L80,14 L130,28" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite" keyTimes="0;.05;.85;1"/></circle>
+            </svg>
+          </div>
+          <a href="#contact" class="svc-link" data-i18n="s6_cta">Learn more →</a>
+          <div class="svc-n">05</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PORTFOLIO ═══ -->
+  <section class="section" id="portfolio">
+    <div class="wrap">
+      <div class="rv">
+        <div class="eyebrow" data-i18n="port_tag">Selected work</div>
+        <h2 class="h2" data-i18n="port_title">Projects that ship<br>and stay shipped.</h2>
+        <p class="body-lg" style="max-width:480px;margin-top:10px;margin-bottom:56px" data-i18n="port_sub">Each project below represents a real problem solved — not a mockup, not a template.</p>
+      </div>
+      <div class="report-card rv">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px">
+          <h3 style="font-size:22px;font-weight:700;letter-spacing:-.5px">Security Benchmark</h3>
+          <div style="font-family:var(--m);font-size:12px;color:var(--mid)">Vulnerability Tracking 2024</div>
+        </div>
+        <table class="p-table">
+          <thead><tr><th data-i18n="th_cve">CVE ID</th><th data-i18n="th_desc">Description</th><th data-i18n="th_sev">Severity</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td style="font-family:var(--m)">CVE-2024-001</td><td>Memory Leak in Kernel Module</td><td><span class="tag-pill t-crit">CRITICAL 9.8</span></td><td><span class="tag-pill t-done">RESOLVED</span></td></tr>
+            <tr><td style="font-family:var(--m)">CVE-2024-007</td><td>Broken Access Control (JWT)</td><td><span class="tag-pill" style="background:rgba(255,159,10,.08);color:var(--orange);font-size:10px;padding:3px 9px;border-radius:5px;font-weight:600">HIGH 8.4</span></td><td><span class="tag-pill t-done">RESOLVED</span></td></tr>
+            <tr><td style="font-family:var(--m)">CVE-2024-021</td><td>SQL Injection in Auth API</td><td><span class="tag-pill t-crit">CRITICAL 9.1</span></td><td><span class="tag-pill t-done">RESOLVED</span></td></tr>
+            <tr><td style="font-family:var(--m)">CVE-2023-4521</td><td>Cross-Site Scripting (XSS)</td><td><span class="tag-pill" style="background:rgba(0,113,227,.08);color:var(--blue);font-size:10px;padding:3px 9px;border-radius:5px;font-weight:600">MED 6.2</span></td><td><span class="tag-pill t-done">PATCHED</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="chart-grid rv">
+        <div class="chart-box">
+          <h4 style="font-size:18px;font-weight:700;margin-bottom:6px">System Integrity</h4>
+          <p style="font-size:13px;color:var(--mid)">99.9% protection rate across all deployed monitoring agents.</p>
+          <div class="bar-wrap">
+            <div class="bar"><div class="bar-fill" style="height:45%"></div></div>
+            <div class="bar"><div class="bar-fill" style="height:88%"></div></div>
+            <div class="bar"><div class="bar-fill" style="height:62%"></div></div>
+            <div class="bar"><div class="bar-fill" style="height:94%"></div></div>
+            <div class="bar"><div class="bar-fill" style="height:78%"></div></div>
+          </div>
+        </div>
+        <div class="chart-box" style="display:flex;align-items:center;padding:40px">
+          <div style="flex:1">
+            <h4 style="font-size:28px;font-weight:700;margin-bottom:7px">40+</h4>
+            <p style="color:var(--mid);font-size:14px">Successful cybersecurity audits completed in the last 12 months.</p>
+          </div>
+          <div style="width:200px;height:120px;position:relative">
+            <svg viewBox="0 0 120 70" width="100%" height="100%">
+              <path d="M10,60 Q30,10 60,35 T110,20" fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="110" cy="20" r="4" fill="var(--blue)"><animate attributeName="r" values="3;5;3" dur="2s" repeatCount="indefinite"/></circle>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="portfolio-grid rv" style="margin-top:14px">
+        <!-- Pentest -->
+        <div class="port-card" style="background:linear-gradient(160deg,#0f0e18,#120808)">
+          <div class="pc-head"><div class="pc-badges"><span class="pc-badge">Python</span><span class="pc-badge">Metasploit</span><span class="pc-badge">nmap</span></div><div class="pc-status"><div class="pc-dot-live"></div><span data-i18n="p_report_done">Report delivered</span></div></div>
+          <div class="pc-body">
+            <div style="font-size:10px;font-family:var(--m);color:rgba(255,255,255,.2);letter-spacing:.07em;text-transform:uppercase;margin-bottom:10px" data-i18n="p_vulns_found">Vulnerabilities found</div>
+            <table class="vuln-table">
+              <thead><tr><th data-i18n="th_cve">CVE ID</th><th data-i18n="th_desc">Description</th><th data-i18n="th_sev">Severity</th></tr></thead>
+              <tbody>
+                <tr><td>CVE-2024-1234</td><td>RCE via deserialization</td><td><span class="sev sev-crit">CRIT</span></td></tr>
+                <tr><td>CVE-2024-5678</td><td>Auth bypass via JWT none</td><td><span class="sev sev-high">HIGH</span></td></tr>
+                <tr><td>CVE-2024-9012</td><td>SSRF in file upload</td><td><span class="sev sev-med">MED</span></td></tr>
+              </tbody>
+            </table>
+            <div class="pc-chips">
+              <div class="pc-chip"><div class="pc-chip-n">9.8</div><div class="pc-chip-l" data-i18n="chip_cvss">max CVSS</div></div>
+              <div class="pc-chip"><div class="pc-chip-n">48h</div><div class="pc-chip-l" data-i18n="chip_del">delivery</div></div>
+              <div class="pc-chip"><div class="pc-chip-n" style="color:rgba(48,209,88,.8)">3/3</div><div class="pc-chip-l" data-i18n="chip_res">resolved</div></div>
+            </div>
+          </div>
+          <div class="pc-footer"><div><div class="pc-title" data-i18n="p1_title">Security Audit — SaaS Platform</div><div class="pc-sub">python / metasploit / nmap / burp</div></div><svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="color:rgba(255,255,255,.18)"><path d="M3 13L13 3M13 3H5M13 3v8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <!-- Analytics -->
+        <div class="port-card" style="background:linear-gradient(160deg,#0a0f1a,#0d1520)">
+          <div class="pc-head"><div class="pc-badges"><span class="pc-badge">React</span><span class="pc-badge">D3.js</span><span class="pc-badge">Python</span></div><div class="pc-status"><div class="pc-dot-live"></div><span>Live</span></div></div>
+          <div class="pc-body">
+            <div style="width:100%;height:80px;position:relative;overflow:hidden">
+              <svg viewBox="0 0 300 80" width="100%" height="80" preserveAspectRatio="none">
+                <defs><linearGradient id="ag1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0071e3" stop-opacity=".3"/><stop offset="100%" stop-color="#0071e3" stop-opacity="0"/></linearGradient></defs>
+                <path d="M0,60 L30,40 L60,50 L90,25 L120,35 L150,15 L180,30 L210,10 L240,20 L270,5 L300,15 L300,80 L0,80Z" fill="url(#ag1)"/>
+                <path d="M0,60 L30,40 L60,50 L90,25 L120,35 L150,15 L180,30 L210,10 L240,20 L270,5 L300,15" fill="none" stroke="#0071e3" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="pc-chips">
+              <div class="pc-chip"><div class="pc-chip-n">2.4M</div><div class="pc-chip-l">events/day</div></div>
+              <div class="pc-chip"><div class="pc-chip-n" style="color:rgba(48,209,88,.8)">99.9%</div><div class="pc-chip-l">uptime</div></div>
+              <div class="pc-chip"><div class="pc-chip-n">12ms</div><div class="pc-chip-l">p99 latency</div></div>
+            </div>
+          </div>
+          <div class="pc-footer"><div><div class="pc-title" data-i18n="p2_title">Analytics Platform</div><div class="pc-sub">react / d3 / python / clickhouse</div></div><svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="color:rgba(255,255,255,.18)"><path d="M3 13L13 3M13 3H5M13 3v8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <!-- Pipeline -->
+        <div class="port-card" style="background:linear-gradient(160deg,#0d1a0d,#0a120a)">
+          <div class="pc-head"><div class="pc-badges"><span class="pc-badge">Python</span><span class="pc-badge">Celery</span><span class="pc-badge">Redis</span></div><div class="pc-status"><div class="pc-dot-live"></div><span data-i18n="p_pipeline">Data pipeline</span></div></div>
+          <div class="pc-body">
+            <div class="pipe-flow">
+              <div class="pipe-step-card"><div class="pipe-icon" style="background:rgba(0,113,227,.1)"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="#89b4fa" stroke-width="1.2"/><path d="M4 7h6M7 4v6" stroke="#89b4fa" stroke-width="1.2" stroke-linecap="round"/></svg></div><div class="pipe-text"><div class="pipe-name">Data ingestion</div><div class="pipe-detail">Kafka → raw store</div></div><span class="pipe-badge" style="background:rgba(0,113,227,.12);color:#89b4fa">ingest</span></div>
+              <div class="pipe-connector"><div class="pipe-connector-track"></div></div>
+              <div class="pipe-step-card"><div class="pipe-icon" style="background:rgba(255,159,10,.1)"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M3 6l4-4 4 4" stroke="#f9e2af" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="pipe-text"><div class="pipe-name">ETL Transform</div><div class="pipe-detail">Clean · deduplicate</div></div><span class="pipe-badge" style="background:rgba(255,159,10,.12);color:#f9e2af">transform</span></div>
+              <div class="pipe-connector"><div class="pipe-connector-track" style="animation-delay:.6s"></div></div>
+              <div class="pipe-step-card"><div class="pipe-icon" style="background:rgba(48,209,88,.1)"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><rect x="2" y="2" width="10" height="10" rx="1.5" stroke="#a6e3a1" stroke-width="1.2"/><path d="M4 7h6M7 4v6" stroke="#a6e3a1" stroke-width="1.2" stroke-linecap="round"/></svg></div><div class="pipe-text"><div class="pipe-name">Dashboard output</div><div class="pipe-detail">Auto-refresh 15min</div></div><span class="pipe-badge" style="background:rgba(48,209,88,.15);color:#a6e3a1">done</span></div>
+            </div>
+            <div class="pipe-result">Saves team <span style="color:#a6e3a1;font-weight:600">8h/week</span> · running since Jan 2025</div>
+          </div>
+          <div class="pc-footer"><div><div class="pc-title" data-i18n="p3_title">Automation Pipeline</div><div class="pc-sub">etl / celery / redis / dashboard</div></div><svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="color:rgba(255,255,255,.18)"><path d="M3 13L13 3M13 3H5M13 3v8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <!-- API -->
+        <div class="port-card" style="background:linear-gradient(160deg,#0d0a1a,#120820)">
+          <div class="pc-head"><div class="pc-badges"><span class="pc-badge">Go</span><span class="pc-badge">Docker</span><span class="pc-badge">PostgreSQL</span><span class="pc-badge">JWT</span></div><div class="pc-status"><div class="pc-dot-live"></div><span>99.9% uptime</span></div></div>
+          <div class="pc-body">
+            <div style="font-size:10px;font-family:var(--m);color:rgba(255,255,255,.2);letter-spacing:.07em;text-transform:uppercase;margin-bottom:10px">API endpoints</div>
+            <div class="api-endpoints">
+              <div class="ep"><span class="method m-get">GET</span><span class="ep-path">/api/v1/scan</span><span class="ep-code">200</span><span class="ep-ms">14ms</span></div>
+              <div class="ep"><span class="method m-post">POST</span><span class="ep-path">/api/v1/audit</span><span class="ep-code">201</span><span class="ep-ms">38ms</span></div>
+              <div class="ep"><span class="method m-get">GET</span><span class="ep-path">/api/v1/reports/{id}</span><span class="ep-code">200</span><span class="ep-ms">8ms</span></div>
+              <div class="ep"><span class="method m-put">PUT</span><span class="ep-path">/api/v1/targets/{id}</span><span class="ep-code">200</span><span class="ep-ms">22ms</span></div>
+              <div class="ep"><span class="method m-del">DEL</span><span class="ep-path">/api/v1/scan/{id}</span><span class="ep-code">204</span><span class="ep-ms">6ms</span></div>
+            </div>
+            <div class="pc-chips">
+              <div class="pc-chip"><div class="pc-chip-n">2.1M</div><div class="pc-chip-l">req/month</div></div>
+              <div class="pc-chip"><div class="pc-chip-n" style="color:rgba(48,209,88,.8)">18ms</div><div class="pc-chip-l">avg latency</div></div>
+              <div class="pc-chip"><div class="pc-chip-n">99.9%</div><div class="pc-chip-l">uptime</div></div>
+            </div>
+          </div>
+          <div class="pc-footer"><div><div class="pc-title" data-i18n="p4_title">REST API Gateway</div><div class="pc-sub">go / jwt / postgresql / docker</div></div><svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="color:rgba(255,255,255,.18)"><path d="M3 13L13 3M13 3H5M13 3v8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ DARK NETWORK SECTION ═══ -->
+  <section class="net-section" id="security">
+    <div class="wrap">
+      <div class="net-grid rv">
+        <div class="net-text">
+          <div class="eyebrow" data-i18n="net_tag">Network Mapping</div>
+          <h2 class="h2" data-i18n="net_title">Every endpoint.<br>Every vulnerability.</h2>
+          <p class="body-lg" style="margin-top:10px" data-i18n="net_sub">We map your entire attack surface — every port, every service, every dependency. Then we exploit it before attackers do.</p>
+          <div class="net-list">
+            <div class="net-li" data-i18n="nl1">Full-stack vulnerability assessment</div>
+            <div class="net-li" data-i18n="nl2">CVE mapping with CVSS 3.1 scoring</div>
+            <div class="net-li" data-i18n="nl3">Remediation report with exact patches</div>
+          </div>
+          <div class="net-btns">
+            <a href="/cdn-cgi/l/email-protection#a0c8c9e0c1cbd4d2cfce8ec4c5d6" class="btn-white" data-i18n="cta_email">Send an email</a>
+            <a href="https://t.me/aktron" class="btn-ghost-white">Telegram</a>
+          </div>
+        </div>
+        <!-- Animated SVG threat map replacing broken image -->
+        <div class="rv d2" style="background:#0d0d18;border-radius:24px;overflow:hidden;border:1px solid rgba(255,255,255,.06);box-shadow:0 24px 80px rgba(0,0,0,.4);position:relative;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center">
+          <svg viewBox="0 0 400 300" width="100%" height="100%" style="position:absolute;inset:0">
+            <!-- Grid -->
+            <defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,.04)" stroke-width="1"/></pattern></defs>
+            <rect width="400" height="300" fill="url(#grid)"/>
+            <!-- Nodes -->
+            <circle cx="60" cy="80" r="6" fill="#0071e3" opacity=".7"><animate attributeName="opacity" values=".7;1;.7" dur="2s" begin="0s" repeatCount="indefinite"/></circle>
+            <circle cx="320" cy="60" r="6" fill="#ff453a" opacity=".8"><animate attributeName="opacity" values=".8;1;.8" dur="1.5s" begin=".3s" repeatCount="indefinite"/></circle>
+            <circle cx="200" cy="150" r="10" fill="rgba(0,113,227,.15)" stroke="#0071e3" stroke-width="1.5"><animate attributeName="r" values="10;14;10" dur="3s" repeatCount="indefinite"/></circle>
+            <circle cx="340" cy="220" r="5" fill="#30d158" opacity=".7"><animate attributeName="opacity" values=".7;1;.7" dur="2.5s" begin=".8s" repeatCount="indefinite"/></circle>
+            <circle cx="80" cy="240" r="5" fill="#ff9f0a" opacity=".6"><animate attributeName="opacity" values=".6;1;.6" dur="1.8s" begin="1.2s" repeatCount="indefinite"/></circle>
+            <!-- Attack paths -->
+            <line x1="60" y1="80" x2="200" y2="150" stroke="rgba(255,69,58,.25)" stroke-width="1" stroke-dasharray="5,5"><animate attributeName="stroke-dashoffset" values="0;-20" dur="1s" repeatCount="indefinite"/></line>
+            <line x1="320" y1="60" x2="200" y2="150" stroke="rgba(255,69,58,.25)" stroke-width="1" stroke-dasharray="5,5"><animate attributeName="stroke-dashoffset" values="0;-20" dur="1.2s" repeatCount="indefinite"/></line>
+            <line x1="200" y1="150" x2="340" y2="220" stroke="rgba(0,113,227,.2)" stroke-width="1" stroke-dasharray="5,5"><animate attributeName="stroke-dashoffset" values="0;20" dur="1.5s" repeatCount="indefinite"/></line>
+            <line x1="200" y1="150" x2="80" y2="240" stroke="rgba(48,209,88,.2)" stroke-width="1" stroke-dasharray="5,5"><animate attributeName="stroke-dashoffset" values="0;20" dur="1.8s" repeatCount="indefinite"/></line>
+            <!-- Ping packets -->
+            <circle r="3" fill="#ff453a" opacity="0"><animateMotion path="M60,80 L200,150" dur="1.2s" begin="0s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;0" dur="1.2s" begin="0s" repeatCount="indefinite"/></circle>
+            <circle r="3" fill="#0071e3" opacity="0"><animateMotion path="M200,150 L340,220" dur="1.5s" begin=".4s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;0" dur="1.5s" begin=".4s" repeatCount="indefinite"/></circle>
+          </svg>
+          <div style="position:absolute;top:16px;right:16px;background:rgba(255,69,58,.15);border:1px solid rgba(255,69,58,.3);color:#ff6b61;font-family:var(--m);font-size:10px;font-weight:700;padding:6px 12px;border-radius:8px;backdrop-filter:blur(8px)">LIVE ATTACK FEED</div>
+          <div style="position:absolute;bottom:16px;left:16px;background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.6);font-family:var(--m);font-size:10px;padding:8px 14px;border-radius:8px;backdrop-filter:blur(8px)">
+            <span style="color:#30d158">●</span> 2 threats blocked · <span style="color:#89b4fa">aktron@scan</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TERMINAL ═══ -->
+  <section class="terminal-section" id="terminal">
+    <div class="wrap">
+      <div class="rv" style="text-align:center;margin-bottom:48px">
+        <div class="eyebrow" style="justify-content:center" data-i18n="term_tag">Live terminal</div>
+        <h2 class="h2" data-i18n="term_title">We think in code.</h2>
+        <p class="body-lg" style="max-width:440px;margin:10px auto 0" data-i18n="term_sub">Two engineers, zero middle-managers. Every line ships with intent.</p>
+      </div>
+      <div class="term-pair rv">
+        <div class="term-outer">
+          <div class="term-bar2"><div class="term-dots"><div class="tdot" style="background:#ff5f56"></div><div class="tdot" style="background:#ffbd2e"></div><div class="tdot" style="background:#27c93f"></div></div><div class="term-title-label">nmap@aktron — pentest</div></div>
+          <div class="term-body2">
+            <div class="tp-row"><span class="tp-prompt">$</span><span class="tp-cmd"> sudo nmap -sV -O 192.168.1.0/24</span></div>
+            <div class="tp-row"><span class="tp-out">Starting Nmap 7.94...</span></div>
+            <div class="tp-row"><span class="tp-info">Host: 192.168.1.1 (router.local)</span></div>
+            <div class="tp-row"><span class="tp-out">22/tcp open ssh OpenSSH 8.9</span></div>
+            <div class="tp-row"><span class="tp-out">80/tcp open http nginx/1.24.0</span></div>
+            <div class="tp-row"><span class="tp-err">ALERT: CVE-2024-0001 CRITICAL</span></div>
+            <div class="tp-row"><span class="tp-prompt">$</span><span class="tp-cmd"> python3 exploit.py --target 192.168.1.1</span></div>
+            <div class="tp-row"><span class="tp-out">[+] Payload delivered. Root shell obtained.</span></div>
+            <div class="tp-row"><span class="tp-prompt">$</span><span class="cursor-blink"></span></div>
+          </div>
+        </div>
+        <div class="term-outer">
+          <div class="term-bar2"><div class="term-dots"><div class="tdot" style="background:#ff5f56"></div><div class="tdot" style="background:#ffbd2e"></div><div class="tdot" style="background:#27c93f"></div></div><div class="term-title-label">linus@aktron — backend</div></div>
+          <div class="term-body2">
+            <div class="tp-row"><span class="tp-prompt">$</span><span class="tp-cmd"> git push origin main</span></div>
+            <div class="tp-row"><span class="tp-out">Enumerating objects: 24, done.</span></div>
+            <div class="tp-row"><span class="tp-out">Delta compression using up to 10 threads</span></div>
+            <div class="tp-row"><span class="tp-info">remote: Deploying to production...</span></div>
+            <div class="tp-row"><span class="tp-out">remote: Build successful ✓</span></div>
+            <div class="tp-row"><span class="tp-out">remote: Tests passed (148/148)</span></div>
+            <div class="tp-row"><span class="tp-out">To github.com/aktron/platform.git</span></div>
+            <div class="tp-row"><span class="tp-out">main → main</span></div>
+            <div class="tp-row"><span class="tp-prompt">$</span><span class="cursor-blink"></span></div>
+          </div>
+        </div>
+      </div>
+      <div class="term-stats rv d2">
+        <div class="term-stat"><div class="term-stat-n">148</div><div class="term-stat-l">TESTS PASSING</div></div>
+        <div class="term-stat term-stat-sep"><div class="term-stat-n">0</div><div class="term-stat-l">PROD INCIDENTS</div></div>
+        <div class="term-stat term-stat-sep"><div class="term-stat-n">99.9%</div><div class="term-stat-l">UPTIME SLA</div></div>
+        <div class="term-stat term-stat-sep"><div class="term-stat-n">&lt;24h</div><div class="term-stat-l">DEPLOY CYCLE</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THE STACK — INTERACTIVE TERMINAL ═══ -->
+  <section class="stack-section-new" id="stack">
+    <div class="wrap">
+      <div class="rv">
+        <div class="eyebrow">The Cybersecurity Stack</div>
+        <h2 class="h2">Every language.<br><span class="grad">One purpose.</span></h2>
+        <p class="body-lg" style="max-width:460px;margin-top:10px">Select a language — terminal opens with real security code.</p>
+      </div>
+
+      <!-- Language pills -->
+      <div class="lang-pills rv d2" id="langPills"></div>
+
+      <!-- Expandable panel (injected by JS) -->
+      <div class="lang-panel-wrap" id="langPanelWrap">
+        <div class="lang-panel" id="langPanel">
+          <div class="lp-info" id="lpInfo">
+            <div class="lp-badge"><span class="lp-badge-dot" id="lpBadgeDot"></span><span id="lpBadgeLang">C++</span></div>
+            <div class="lp-name" id="lpName">C++</div>
+            <div class="lp-desc" id="lpDesc">Select a language</div>
+            <div class="lp-tags" id="lpTags"></div>
+          </div>
+          <div class="lp-term">
+            <div class="lp-term-bar">
+              <div class="lp-dots">
+                <div class="lp-dot" style="background:#ff5f56"></div>
+                <div class="lp-dot" style="background:#ffbd2e"></div>
+                <div class="lp-dot" style="background:#27c93f"></div>
+              </div>
+              <div class="lp-term-title" id="lpTermTitle">aktron@mac — cybersecurity</div>
+            </div>
+            <div class="lp-term-body" id="lpTermBody"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ticker belt -->
+      <div class="stack-ticker rv d4">
+        <div class="stack-ticker-inner" id="stackTicker"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TEAM ═══ -->
+  <section class="section" id="team" style="background:var(--bg2)">
+    <div class="wrap">
+      <div class="rv">
+        <div class="eyebrow" data-i18n="team_tag">The team</div>
+        <h2 class="h2" data-i18n="team_title">Two engineers.<br>All the firepower.</h2>
+        <p class="body-lg" style="max-width:480px;margin-top:10px;margin-bottom:48px" data-i18n="team_sub">Small team, zero overhead. You talk directly to the people writing your code.</p>
+      </div>
+      <div class="team-grid rv">
+        <div class="team-card">
+          <div class="team-glow" style="background:rgba(0,113,227,.2)"></div>
+          <div class="team-top">
+            <div class="team-av team-av-blue">N</div>
+            <div>
+              <div class="team-name">nmap</div>
+              <div class="team-role" style="color:var(--blue)">Security Engineer</div>
+            </div>
+          </div>
+          <div class="team-bio" data-i18n="nmap_bio">Specializes in network security, penetration testing, and low-level systems. Finds vulnerabilities before anyone else does. Named after the tool — because he lives in terminals.</div>
+          <div class="sk-row"><span class="sk-label">Pentesting</span><div class="sk-track"><div class="sk-fill" data-w="96" style="background:var(--blue)"></div></div><span class="sk-val">96%</span></div>
+          <div class="sk-row"><span class="sk-label">Networks</span><div class="sk-track"><div class="sk-fill" data-w="92" style="background:var(--blue)"></div></div><span class="sk-val">92%</span></div>
+          <div class="sk-row"><span class="sk-label">C / Rust</span><div class="sk-track"><div class="sk-fill" data-w="88" style="background:var(--blue)"></div></div><span class="sk-val">88%</span></div>
+          <div class="team-tags"><span class="tag">nmap</span><span class="tag">Metasploit</span><span class="tag">Burp Suite</span><span class="tag">Rust</span><span class="tag">C</span></div>
+        </div>
+        <div class="team-card">
+          <div class="team-glow" style="background:rgba(48,209,88,.2)"></div>
+          <div class="team-top">
+            <div class="team-av team-av-green">L</div>
+            <div>
+              <div class="team-name">linus</div>
+              <div class="team-role" style="color:var(--green)">Full-Stack Engineer</div>
+            </div>
+          </div>
+          <div class="team-bio" data-i18n="linus_bio">Builds frontends users love and backends that never go down. From single-page sites to distributed platforms — all clean, all maintainable, all fast.</div>
+          <div class="sk-row"><span class="sk-label">Frontend</span><div class="sk-track"><div class="sk-fill" data-w="94" style="background:var(--green)"></div></div><span class="sk-val">94%</span></div>
+          <div class="sk-row"><span class="sk-label">Backend</span><div class="sk-track"><div class="sk-fill" data-w="91" style="background:var(--green)"></div></div><span class="sk-val">91%</span></div>
+          <div class="sk-row"><span class="sk-label">DevOps</span><div class="sk-track"><div class="sk-fill" data-w="85" style="background:var(--green)"></div></div><span class="sk-val">85%</span></div>
+          <div class="team-tags"><span class="tag">React</span><span class="tag">Python</span><span class="tag">Go</span><span class="tag">Docker</span><span class="tag">PostgreSQL</span></div>
+        </div>
+      </div>
+
+      <!-- Process -->
+      <div class="rv" style="margin-top:96px">
+        <div class="eyebrow">How we work</div>
+        <h2 class="h2">From brief to<br><span class="grad">shipped.</span></h2>
+      </div>
+      <div class="process-grid rv">
+        <div class="proc-card"><div class="proc-num">01 — DISCOVERY</div><div class="proc-icon"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.4"/><path d="M7 10h6M10 7v6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></div><div class="proc-title">Understand the brief</div><div class="proc-desc">We ask the right questions upfront. No surprises mid-project.</div></div>
+        <div class="proc-card"><div class="proc-num">02 — PLANNING</div><div class="proc-icon"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="2" y="3" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M6 8h8M6 11.5h5M6 15h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div><div class="proc-title">Scope & architecture</div><div class="proc-desc">Clear milestones. Tech stack chosen for the problem, not trend.</div></div>
+        <div class="proc-card"><div class="proc-num">03 — BUILD</div><div class="proc-icon"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M4 6l4 4-4 4M10 14h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="proc-title">Build & iterate</div><div class="proc-desc">Weekly updates, real code, zero fluff. You see progress, always.</div></div>
+        <div class="proc-card"><div class="proc-num">04 — SHIP</div><div class="proc-icon"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 3v14M4 9l6-6 6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="proc-title">Deploy & handoff</div><div class="proc-desc">Production-ready delivery. Docs, tests, monitoring included.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══ REVIEWS / iMESSAGE ═══ -->
+  <section class="section" id="reviews">
+    <div class="wrap">
+      <div class="rv" style="text-align:center;margin-bottom:36px">
+        <div class="eyebrow" style="justify-content:center" data-i18n="rev_tag">Client feedback</div>
+        <h2 class="h2" data-i18n="rev_title">What clients actually say.</h2>
+        <p class="body-lg" style="margin:10px auto 0;max-width:340px;text-align:center" data-i18n="rev_sub">Real conversations. Real results.</p>
+      </div>
+      <div class="imsg-wrap rv">
+        <div class="imsg-tabs" id="reviewTabs">
+          <button class="imsg-tab active" onclick="loadReview(0,this)">Alex K.</button>
+          <button class="imsg-tab" onclick="loadReview(1,this)">Marina V.</button>
+          <button class="imsg-tab" onclick="loadReview(2,this)">Dmitry S.</button>
+        </div>
+        <div class="phone-shell">
+          <div class="iph-bar">
+            <div class="iph-time" id="revTime">9:41</div>
+            <div class="iph-icons">
+              <svg width="15" height="10" viewBox="0 0 16 10" fill="currentColor"><rect x="0" y="7" width="2.3" height="3" rx=".4"/><rect x="3.2" y="4.5" width="2.3" height="5.5" rx=".4"/><rect x="6.4" y="2" width="2.3" height="8" rx=".4"/><rect x="9.6" y="0" width="2.3" height="10" rx=".4"/></svg>
+              <svg width="20" height="10" viewBox="0 0 22 10" fill="none"><rect x=".5" y=".5" width="18" height="9" rx="2.2" stroke="currentColor" stroke-width="1"/><rect x="2" y="2" width="13" height="6" rx="1.2" fill="currentColor"/></svg>
+            </div>
+          </div>
+          <div class="iph-nav">
+            <div class="iph-nav-row">
+              <div class="iph-back"><svg width="7" height="12" viewBox="0 0 8 13" fill="none"><path d="M7 1L1 6.5 7 12" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:15px;margin-left:2px" data-i18n="imsg_back">Messages</span></div>
+              <div class="iph-contact-center">
+                <div class="iph-av-sm" id="revAvSm" style="background:#ff6b35">A</div>
+                <div class="iph-nm-sm" id="revNmSm">Alex K.</div>
+              </div>
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="color:var(--blue)"><circle cx="10" cy="10" r="1" fill="currentColor"/><circle cx="5" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/></svg>
+            </div>
+          </div>
+          <div class="iph-info">
+            <div class="iph-av-lg" id="revAvLg" style="background:#ff6b35">A</div>
+            <div class="iph-nm-lg" id="revNmLg">Alex K.</div>
+            <div class="iph-sub-text" data-i18n="imsg_active">iMessage · Active now</div>
+          </div>
+          <div class="iph-chat" id="revChat">
+            <div class="iph-date" data-i18n="imsg_date">Today at 2:04 PM</div>
+          </div>
+          <div class="iph-input-row">
+            <button class="iph-btn-sm"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 7h4M7 5v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+            <div class="iph-pill-input" data-i18n="imsg_placeholder">iMessage</div>
+            <button class="iph-send"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M6 10V2M2.5 5.5L6 2l3.5 3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ═══ CONTACT ═══ -->
+  <section class="section" id="contact">
+    <div class="wrap">
+      <div class="contact-layout rv">
+        <div>
+          <div class="eyebrow" data-i18n="cont_tag">Say hello</div>
+          <h2 class="h2" data-i18n="cont_title">Let's build<br>something real.</h2>
+          <p class="body-lg" style="max-width:360px;margin-top:10px" data-i18n="cont_sub">Tell us what you need. We will tell you how to do it right — and faster than you expect.</p>
+          <div class="contact-methods">
+            <a href="/cdn-cgi/l/email-protection#670f0e27060c1315080949030211" class="contact-link">
+              <div class="cl-icon"><svg width="16" height="12" viewBox="0 0 17 13" fill="none"><rect x="1" y="1" width="15" height="11" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M1 4l7.5 4.5L16 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+              <span><span class="__cf_email__" data-cfemail="8fe7e6cfeee4fbfde0e1a1ebeaf9">[email&#160;protected]</span></span>
+            </a>
+            <a href="https://t.me/aktron" class="contact-link">
+              <div class="cl-icon"><svg width="16" height="14" viewBox="0 0 17 15" fill="none"><path d="M1 7L15 1 11.5 14 7.5 9 1 7z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M7.5 9l2.5 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span>t.me/aktron</span>
+            </a>
+          </div>
+          <div class="contact-note">
+            <div class="cn-avail"><div style="width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulseGreen 2s ease-in-out infinite"></div><span data-i18n="cont_avail">Available now · Reply within 24h</span></div>
+            <p class="body-sm" data-i18n="cont_note">No auto-responses, no account managers. nmap or linus will reply directly.</p>
+          </div>
+        </div>
+        <!-- iMessage contact form -->
+        <div>
+          <div class="cp-phone">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px 4px;background:rgba(242,242,247,.98)">
+              <div style="font-size:14px;font-weight:600" id="cpTime">9:41</div>
+              <div style="display:flex;align-items:center;gap:5px"><svg width="15" height="10" viewBox="0 0 16 10" fill="currentColor"><rect x="0" y="7" width="2.3" height="3" rx=".4"/><rect x="3.2" y="4.5" width="2.3" height="5.5" rx=".4"/><rect x="6.4" y="2" width="2.3" height="8" rx=".4"/><rect x="9.6" y="0" width="2.3" height="10" rx=".4"/></svg><svg width="20" height="10" viewBox="0 0 22 10" fill="none"><rect x=".5" y=".5" width="18" height="9" rx="2.2" stroke="currentColor" stroke-width="1"/><rect x="2" y="2" width="13" height="6" rx="1.2" fill="currentColor"/></svg></div>
+            </div>
+            <div style="background:rgba(242,242,247,.98);border-bottom:1px solid var(--sep);padding:0 12px">
+              <div style="display:flex;align-items:center;justify-content:space-between;height:44px">
+                <div style="display:flex;align-items:center;gap:2px;color:var(--blue);font-size:15px"><svg width="7" height="12" viewBox="0 0 8 13" fill="none"><path d="M7 1L1 6.5 7 12" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="imsg_back">Messages</span></div>
+                <div style="display:flex;flex-direction:column;align-items:center">
+                  <div style="width:27px;height:27px;border-radius:50%;background:linear-gradient(135deg,#003d99,#0071e3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff">A</div>
+                  <div style="font-size:11px;margin-top:1px">Aktron</div>
+                </div>
+                <svg width="16" height="16" viewBox="0 0 18 18" fill="none" style="color:var(--blue)"><circle cx="9" cy="9" r="1" fill="currentColor"/><circle cx="4" cy="9" r="1" fill="currentColor"/><circle cx="14" cy="9" r="1" fill="currentColor"/></svg>
+              </div>
+            </div>
+            <div id="cpChat" style="background:#fff;padding:10px 12px;min-height:180px;max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:7px">
+              <div class="iph-date">Today</div>
+              <div class="chat-row recv show" style="padding-right:40px">
+                <div class="bubble recv" style="font-size:14px" data-i18n="cp_greeting">Hi! Tell us about your project.</div>
+              </div>
+            </div>
+            <div class="cp-input-row">
+              <input class="cp-field" id="cpField" placeholder="Type a message…" autocomplete="off">
+              <button class="cp-send" id="cpSend" disabled><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M6 10V2M2.5 5.5L6 2l3.5 3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FAQ ═══ -->
+  <section class="section" style="background:var(--bg2)" id="faq">
+    <div class="wrap">
+      <div class="rv" style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start">
+        <div>
+          <div class="eyebrow">FAQ</div>
+          <h2 class="h2">Common<br>questions.</h2>
+          <p class="body-lg" style="margin-top:12px;max-width:320px">Everything you need to know before starting a project with us.</p>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item"><button class="faq-q">How fast can you start?<div class="faq-arr"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2l-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div></button><div class="faq-a"><div class="faq-a-inner">Usually within 48 hours of the first call. We keep our pipeline lean so you're never waiting on scheduling.</div></div></div>
+          <div class="faq-item"><button class="faq-q">Do you work with non-technical founders?<div class="faq-arr"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2l-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div></button><div class="faq-a"><div class="faq-a-inner">Absolutely. We translate technical decisions into plain English and guide you through every step.</div></div></div>
+          <div class="faq-item"><button class="faq-q">What's your typical project size?<div class="faq-arr"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2l-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div></button><div class="faq-a"><div class="faq-a-inner">From quick 2-week security audits to 6-month platform builds. We scope precisely and price transparently.</div></div></div>
+          <div class="faq-item"><button class="faq-q">Do you sign NDAs?<div class="faq-arr"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2l-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div></button><div class="faq-a"><div class="faq-a-inner">Yes, always. Confidentiality is non-negotiable — especially for security work.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA ═══ -->
+  <section class="cta-section">
+    <div class="wrap">
+      <h2 class="h2" data-i18n="cta_title">Ready to build?</h2>
+      <p data-i18n="cta_sub">Tell us what you need. We will respond within 24 hours, personally.</p>
+      <div class="cta-btns">
+        <a href="/cdn-cgi/l/email-protection#c2aaab82a3a9b6b0adaceca6a7b4" class="btn-white" data-i18n="cta_email">Send an email</a>
+        <a href="https://t.me/aktron" class="btn-ghost-white">Telegram</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot-row">
+        <div class="foot-logo">Aktron</div>
+        <div class="foot-links"><a href="#services" data-i18n="nav_services">Services</a><a href="#portfolio" data-i18n="nav_work">Work</a><a href="#team" data-i18n="nav_team">Team</a><a href="#contact" data-i18n="nav_contact">Contact</a></div>
+        <div class="foot-copy">2025 — nmap &amp; linus</div>
+      </div>
+    </div>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  'use strict';
+  /* ─── i18n ─── */
+  var CL = 'en';
+  var TX = {
+    en:{
+      nav_services:'Services',nav_work:'Work',nav_team:'Team',nav_reviews:'Reviews',nav_contact:'Contact',nav_cta:'Start project',
+      hero_avail:'Available for new projects',hero_sub:'Full-stack development and cybersecurity from two engineers who know what they are doing. No agencies, no fluff — just results.',hero_cta1:'Start a project',hero_cta2:'See our work',
+      s_projects:'projects',s_sat:'satisfied',s_exp:'experience',s_resp:'response',
+      svc_tag:'What we build',svc_title:'Every kind of software.<br>All of it excellent.',svc_sub:'From securing infrastructure to shipping products users love — we cover the full spectrum.',
+      s1_t:'Cybersecurity',s1_d:'Penetration testing, vulnerability assessments, security audits, and threat modeling for web apps, APIs, and networks.',s1_lt:'What you get',s1_c1:'Full penetration test report',s1_c2:'CVE mapping with CVSS 3.1 scores',s1_c3:'Remediation roadmap',s1_c4:'30-day post-audit support',s1_cta:'Book an audit',
+      s2_t:'Web Development',s2_d:'Modern web apps, landing pages, full-stack platforms. Clean code, fast performance, responsive by default.',s2_cta:'Get a quote',
+      s3_t:'Custom Software',s3_d:'CLI tools, desktop apps, automation pipelines. Whatever you need shipped, we build it right.',s3_cta:'Discuss scope',
+      s4_t:'AI Integration',s4_d:'LLMs, ML models, and computer vision integrated into your existing products and workflows.',s4_cta:'Explore options',
+      s5_t:'API & Backend',s5_d:'REST APIs, auth systems, databases — scalable backends that hold under production load.',s5_cta:'Get started',
+      s6_t:'Network Security',s6_d:'Network scanning, hardening, firewall configuration, intrusion detection setup.',s6_cta:'Learn more',
+      port_tag:'Selected work',port_title:'Projects that ship<br>and stay shipped.',port_sub:'Each project below represents a real problem solved — not a mockup, not a template.',
+      p_report_done:'Report delivered',p_vulns_found:'Vulnerabilities found',th_cve:'CVE ID',th_desc:'Description',th_sev:'Severity',
+      chip_cvss:'max CVSS',chip_del:'delivery',chip_res:'resolved',p_pipeline:'Data pipeline',
+      p1_title:'Security Audit — SaaS Platform',p2_title:'Analytics Platform',p3_title:'Automation Pipeline',p4_title:'REST API Gateway',
+      net_tag:'Network Mapping',net_title:'Every endpoint.<br>Every vulnerability.',net_sub:'We map your entire attack surface — every port, every service, every dependency. Then we exploit it before attackers do.',
+      nl1:'Full-stack vulnerability assessment',nl2:'CVE mapping with CVSS 3.1 scoring',nl3:'Remediation report with exact patches',
+      term_tag:'Live terminal',term_title:'We think in code.',term_sub:'Two engineers, zero middle-managers. Every line ships with intent.',
+      team_tag:'The team',team_title:'Two engineers.<br>All the firepower.',team_sub:'Small team, zero overhead. You talk directly to the people writing your code.',
+      nmap_bio:"Specializes in network security, penetration testing, and low-level systems. Finds vulnerabilities before anyone else does. Named after the tool — because he lives in terminals.",
+      linus_bio:"Builds frontends users love and backends that never go down. From single-page sites to distributed platforms — all clean, all maintainable, all fast.",
+      rev_tag:'Client feedback',rev_title:'What clients actually say.',rev_sub:'Real conversations. Real results.',
+      imsg_back:'Messages',imsg_date:'Today at 2:04 PM',imsg_active:'iMessage · Active now',imsg_placeholder:'iMessage',
+      cont_tag:'Say hello',cont_title:"Let's build<br>something real.",cont_sub:'Tell us what you need. We will tell you how to do it right — and faster than you expect.',cont_avail:'Available now · Reply within 24h',cont_note:'No auto-responses, no account managers. nmap or linus will reply directly.',
+      cp_greeting:'Hi! Tell us about your project.',cp_r1:"Got it! We'll review your request and come back with a clear plan.",cp_r2:"You can also reach us directly at hi@aktron.dev or t.me/aktron.",
+      cta_title:'Ready to build?',cta_sub:'Tell us what you need. We will respond within 24 hours, personally.',cta_email:'Send an email',
+      chats:[
+        {name:'Alex K.',init:'A',color:'#ff6b35',msgs:[{d:'recv',t:'Hey! Just wanted to say the pentest report was extremely thorough.'},{d:'sent',t:'Thanks! We mapped every CVE with CVSS scores as agreed.'},{d:'recv',t:'The remediation roadmap saved us weeks. Absolutely recommend.'},{d:'sent',t:'Happy to help. Reach out when you need the follow-up audit.'}]},
+        {name:'Marina V.',init:'M',color:'#af52de',msgs:[{d:'recv',t:'The new platform launched on time. Zero bugs in production.'},{d:'sent',t:"That's the goal. Clean code makes maintenance easy."},{d:'recv',t:'Already planning the next phase with you.'},{d:'sent',t:'Looking forward to it!'}]},
+        {name:'Dmitry S.',init:'D',color:'#30d158',msgs:[{d:'recv',t:'The data pipeline cut our manual work by 80%.'},{d:'sent',t:'Great! The Celery queue handles spikes really well.'},{d:'recv',t:'Best engineering decision we made this year.'},{d:'sent',t:'Ping us whenever you need to scale it up.'}]}
+      ]
+    },
+    ru:{
+      nav_services:'Услуги',nav_work:'Работы',nav_team:'Команда',nav_reviews:'Отзывы',nav_contact:'Контакт',nav_cta:'Начать проект',
+      hero_avail:'Открыты для новых проектов',hero_sub:'Разработка и кибербезопасность от двух инженеров, которые знают своё дело. Никаких агентств, никакой воды — только результат.',hero_cta1:'Начать проект',hero_cta2:'Смотреть работы',
+      s_projects:'проекта',s_sat:'довольны',s_exp:'опыта',s_resp:'ответ',
+      svc_tag:'Что мы делаем',svc_title:'Любой вид программного<br>обеспечения. Всё отлично.',svc_sub:'От безопасности инфраструктуры до продуктов, которые любят пользователи.',
+      s1_t:'Кибербезопасность',s1_d:'Пентест, аудит уязвимостей, моделирование угроз для веб-приложений, API и сетей.',s1_lt:'Что вы получаете',s1_c1:'Полный отчёт о пентесте',s1_c2:'CVE-маппинг с оценками CVSS 3.1',s1_c3:'Дорожная карта по устранению',s1_c4:'30 дней поддержки после аудита',s1_cta:'Заказать аудит',
+      s2_t:'Веб-разработка',s2_d:'Современные веб-приложения, лендинги, фулстек-платформы. Чистый код, быстро, адаптивно.',s2_cta:'Получить смету',
+      s3_t:'Кастомный софт',s3_d:'CLI-инструменты, десктоп-приложения, пайплайны автоматизации — всё что нужно.',s3_cta:'Обсудить объём',
+      s4_t:'Интеграция ИИ',s4_d:'LLM, ML-модели и компьютерное зрение в ваши продукты и рабочие процессы.',s4_cta:'Узнать подробнее',
+      s5_t:'API и бэкенд',s5_d:'REST API, системы авторизации, базы данных — масштабируемые бэкенды.',s5_cta:'Начать',
+      s6_t:'Сетевая безопасность',s6_d:'Сканирование сети, усиление, настройка брандмауэра, обнаружение вторжений.',s6_cta:'Подробнее',
+      port_tag:'Избранные работы',port_title:'Проекты, которые работают<br>и не ломаются.',port_sub:'Каждый проект — реальная решённая задача. Не макет, не шаблон.',
+      p_report_done:'Отчёт доставлен',p_vulns_found:'Найденные уязвимости',th_cve:'CVE ID',th_desc:'Описание',th_sev:'Критичность',
+      chip_cvss:'макс. CVSS',chip_del:'доставка',chip_res:'устранено',p_pipeline:'Пайплайн данных',
+      p1_title:'Аудит безопасности — SaaS-платформа',p2_title:'Аналитическая платформа',p3_title:'Пайплайн автоматизации',p4_title:'REST API-шлюз',
+      net_tag:'Картографирование сети',net_title:'Каждый эндпоинт.<br>Каждая уязвимость.',net_sub:'Мы картируем всю поверхность атаки — каждый порт, сервис, зависимость. Затем эксплуатируем раньше атакующих.',
+      nl1:'Полная оценка уязвимостей',nl2:'CVE-маппинг с оценкой CVSS 3.1',nl3:'Отчёт по устранению с точными патчами',
+      term_tag:'Живой терминал',term_title:'Мы думаем кодом.',term_sub:'Два инженера, ноль менеджеров. Каждая строка отправляется с умыслом.',
+      team_tag:'Команда',team_title:'Два инженера.<br>Вся огневая мощь.',team_sub:'Маленькая команда, нулевые накладные расходы. Вы говорите напрямую с теми, кто пишет ваш код.',
+      nmap_bio:'Специализируется на сетевой безопасности, пентесте и низкоуровневых системах. Находит уязвимости раньше всех. Назван в честь инструмента — потому что живёт в терминалах.',
+      linus_bio:'Создаёт фронтенды, которые любят пользователи, и бэкенды, которые не падают. От одностраничных сайтов до распределённых платформ.',
+      rev_tag:'Отзывы клиентов',rev_title:'Что говорят клиенты.',rev_sub:'Реальные переписки. Реальные результаты.',
+      imsg_back:'Сообщения',imsg_date:'Сегодня в 14:04',imsg_active:'iMessage · Онлайн',imsg_placeholder:'iMessage',
+      cont_tag:'Скажите привет',cont_title:'Давайте создадим<br>что-то настоящее.',cont_sub:'Расскажите что нужно. Мы объясним как сделать правильно — и быстрее, чем вы ждёте.',cont_avail:'Онлайн · Ответ в течение 24ч',cont_note:'Никаких автоответов и менеджеров. Отвечают nmap или linus лично.',
+      cp_greeting:'Привет! Расскажи о своём проекте.',cp_r1:'Понял! Мы рассмотрим запрос и вернёмся с чётким планом.',cp_r2:'Также можно написать напрямую: hi@aktron.dev или t.me/aktron.',
+      cta_title:'Готовы строить?',cta_sub:'Расскажите что нужно. Ответим в течение 24 часов, лично.',cta_email:'Написать на email',
+      chats:[
+        {name:'Алексей К.',init:'А',color:'#ff6b35',msgs:[{d:'recv',t:'Привет! Отчёт о пентесте был очень подробным.'},{d:'sent',t:'Спасибо! Мы отобразили каждый CVE с оценками CVSS.'},{d:'recv',t:'Дорожная карта сэкономила нам недели. Рекомендую!'},{d:'sent',t:'Рады помочь. Обращайтесь для повторного аудита.'}]},
+        {name:'Марина В.',init:'М',color:'#af52de',msgs:[{d:'recv',t:'Платформа запустилась вовремя. Ноль багов в продакшне.'},{d:'sent',t:'Именно к этому мы стремимся. Чистый код упрощает поддержку.'},{d:'recv',t:'Уже планируем следующий этап с вами.'},{d:'sent',t:'Ждём с нетерпением!'}]},
+        {name:'Дмитрий С.',init:'Д',color:'#30d158',msgs:[{d:'recv',t:'Пайплайн данных сократил ручную работу на 80%.'},{d:'sent',t:'Отлично! Celery-очередь хорошо справляется со всплесками.'},{d:'recv',t:'Лучшее инженерное решение этого года.'},{d:'sent',t:'Пишите когда нужно масштабировать.'}]}
+      ]
+    }
+  };
+
+  function applyLang(l){
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var k=el.getAttribute('data-i18n'),v=TX[l][k];
+      if(v!==undefined){
+        el.classList.add('lang-out');
+        setTimeout(function(){el.innerHTML=v;el.classList.remove('lang-out');},160);
+      }
+    });
+    document.querySelectorAll('[data-i18n-ph]').forEach(function(el){
+      var k=el.getAttribute('data-i18n-ph'),v=TX[l][k];
+      if(v!==undefined)el.placeholder=v;
+    });
+  }
+  function setLang(l){
+    CL=l;
+    document.getElementById('btnEN').classList.toggle('on',l==='en');
+    document.getElementById('btnRU').classList.toggle('on',l==='ru');
+    applyLang(l);
+    var activeTab=document.querySelector('.imsg-tab.active');
+    var idx=activeTab?Array.from(document.querySelectorAll('.imsg-tab')).indexOf(activeTab):0;
+    loadReview(idx,activeTab);
+  }
+
+  (function(){
+    'use strict';
+
+    /* ── LANGUAGES DATA ── */
+    const langs=[
+      {id:'cpp',name:'C++',ic:'C++',color:'#0071e3',
+       desc:'Core memory management, buffer exploitation mitigation, and kernel-level hardening. The language of choice when performance and safety must coexist at the lowest level.',
+       tags:['Memory Safety','Kernel Dev','Exploit Mitigation','Systems'],
+       code:[
+         {t:'c',v:'// Secure buffer with bounds protection'},
+         {t:'kw',v:'void'},{t:'c',v:' '},{t:'fn',v:'secure_memcpy'},{t:'c',v:'('},
+         {t:'kw',v:'char'},{t:'c',v:'* dst, '},{t:'kw',v:'const char'},{t:'c',v:'* src, size_t n) {'},
+         {t:'c',v:'\n  '},{t:'kw',v:'if'},{t:'c',v:' (!dst || !src || n == '},{t:'num',v:'0'},{t:'c',v:') '},{t:'kw',v:'return'},{t:'c',v:';'},
+         {t:'c',v:'\n  '},{t:'cmt',v:'// Null-terminate and zero residual'},
+         {t:'c',v:'\n  '},{t:'fn',v:'memset'},{t:'c',v:'(dst, '},{t:'num',v:'0'},{t:'c',v:', n);'},
+         {t:'c',v:'\n  '},{t:'fn',v:'memcpy'},{t:'c',v:'(dst, src, n - '},{t:'num',v:'1'},{t:'c',v:');'},
+         {t:'c',v:'\n  '},{t:'cmt',v:'// Prevent use-after-free via nullptr'},
+         {t:'c',v:'\n  '},{t:'fn',v:'free'},{t:'c',v:'(dst);'},
+         {t:'c',v:'\n  dst = '},{t:'kw',v:'nullptr'},{t:'c',v:';'},
+         {t:'c',v:'\n}'},
+         {t:'c',v:'\n\n'},{t:'cmt',v:'// ASLR + stack canary enforced at compile time'},
+         {t:'c',v:'\n'},{t:'kw',v:'#pragma'},{t:'c',v:' GCC optimize("stack-protector-strong")'},
+       ]},
+      {id:'py',name:'Python',ic:'Py',color:'#30d158',
+       desc:'Rapid security automation, OSINT intelligence gathering, and AI-powered threat analysis pipelines. Python accelerates every phase of the penetration test lifecycle.',
+       tags:['OSINT','Automation','Threat Intel','Scripting'],
+       code:[
+         {t:'cmt',v:'# CVE scanner — auto-block on high threat score'},
+         {t:'c',v:'\n'},{t:'kw',v:'import'},{t:'c',v:' requests, ipaddress'},
+         {t:'c',v:'\n\n'},{t:'kw',v:'def'},{t:'c',v:' '},{t:'fn',v:'scan_target'},{t:'c',v:'(ip: '},{t:'type',v:'str'},{t:'c',v:') -> '},{t:'kw',v:'None'},{t:'c',v:':'},
+         {t:'c',v:'\n    r = requests.'},{t:'fn',v:'get'},{t:'c',v:'(f'},{t:'str',v:'"https://api.threat.io/v2/{ip}"'},{t:'c',v:')'},
+         {t:'c',v:'\n    data = r.'},{t:'fn',v:'json'},{t:'c',v:'()'},
+         {t:'c',v:'\n    '},{t:'kw',v:'if'},{t:'c',v:' data['},{t:'str',v:'"score"'},{t:'c',v:'] > '},{t:'num',v:'8.0'},{t:'c',v:':'},
+         {t:'c',v:'\n        '},{t:'fn',v:'block_firewall'},{t:'c',v:'(ip)'},
+         {t:'c',v:'\n        '},{t:'fn',v:'alert_team'},{t:'c',v:'(ip, data['},{t:'str',v:'"cve_ids"'},{t:'c',v:'])'},
+         {t:'c',v:'\n        '},{t:'fn',v:'log_incident'},{t:'c',v:'(ip, severity='},{t:'str',v:'"CRITICAL"'},{t:'c',v:')'},
+       ]},
+      {id:'rust',name:'Rust',ic:'Rs',color:'#ff9f0a',
+       desc:'Memory-safe systems programming with zero-cost abstractions. Used for critical network proxies, cryptographic engines, and security-critical infrastructure where segfaults are unacceptable.',
+       tags:['Memory Safe','Concurrency','Crypto','Network'],
+       code:[
+         {t:'cmt',v:'// Thread-safe port scanner with zero data races'},
+         {t:'c',v:'\n'},{t:'kw',v:'use'},{t:'c',v:' std::sync::{Arc, Mutex};'},
+         {t:'c',v:'\n'},{t:'kw',v:'use'},{t:'c',v:' std::net::TcpStream;'},
+         {t:'c',v:'\n\n'},{t:'kw',v:'fn'},{t:'c',v:' '},{t:'fn',v:'scan_port'},{t:'c',v:'(host: &'},{t:'kw',v:'str'},{t:'c',v:', port: u16) -> bool {'},
+         {t:'c',v:'\n    '},{t:'kw',v:'let'},{t:'c',v:' addr = '},{t:'fn',v:'format'},{t:'c',v:'!('},{t:'str',v:'"{}:{}"'},{t:'c',v:', host, port);'},
+         {t:'c',v:'\n    TcpStream::'},{t:'fn',v:'connect_timeout'},{t:'c',v:'('},
+         {t:'c',v:'\n        &addr.'},{t:'fn',v:'parse'},{t:'c',v:'().'},{t:'fn',v:'unwrap'},{t:'c',v:'(),'},
+         {t:'c',v:'\n        Duration::'},{t:'fn',v:'from_secs'},{t:'c',v:'('},{t:'num',v:'2'},{t:'c',v:')'},{t:'c',v:'\n    ).'},{t:'fn',v:'is_ok'},{t:'c',v:'()\n}'},
+       ]},
+      {id:'go',name:'Go',ic:'Go',color:'#5ac8fa',
+       desc:'Cloud-native security tooling, concurrent network scanners, and high-throughput API security gateways. Go\'s goroutines make scanning thousands of hosts trivially parallel.',
+       tags:['Cloud Native','Concurrency','APIs','Scanners'],
+       code:[
+         {t:'cmt',v:'// Concurrent TCP port scanner'},
+         {t:'c',v:'\n'},{t:'kw',v:'package'},{t:'c',v:' main'},
+         {t:'c',v:'\n\n'},{t:'kw',v:'func'},{t:'c',v:' '},{t:'fn',v:'scanRange'},{t:'c',v:'(host '},{t:'type',v:'string'},{t:'c',v:', ports []'},{t:'type',v:'int'},{t:'c',v:') {'},
+         {t:'c',v:'\n    '},{t:'type',v:'var'},{t:'c',v:' wg sync.WaitGroup'},
+         {t:'c',v:'\n    '},{t:'kw',v:'for'},{t:'c',v:' _, p := '},{t:'kw',v:'range'},{t:'c',v:' ports {'},
+         {t:'c',v:'\n        wg.'},{t:'fn',v:'Add'},{t:'c',v:'('},{t:'num',v:'1'},{t:'c',v:')'},
+         {t:'c',v:'\n        '},{t:'kw',v:'go'},{t:'c',v:' '},{t:'kw',v:'func'},{t:'c',v:'(port '},{t:'type',v:'int'},{t:'c',v:') {'},
+         {t:'c',v:'\n            '},{t:'kw',v:'defer'},{t:'c',v:' wg.'},{t:'fn',v:'Done'},{t:'c',v:'()'},
+         {t:'c',v:'\n            conn, err := net.'},{t:'fn',v:'DialTimeout'},{t:'c',v:'('},
+         {t:'c',v:'\n                '},{t:'str',v:'"tcp"'},{t:'c',v:', host, '},{t:'num',v:'2'},{t:'c',v:'*time.Second)'},
+         {t:'c',v:'\n            '},{t:'kw',v:'if'},{t:'c',v:' err == '},{t:'kw',v:'nil'},{t:'c',v:' { conn.'},{t:'fn',v:'Close'},{t:'c',v:'() }'},
+         {t:'c',v:'\n        }(p)\n    }\n    wg.'},{t:'fn',v:'Wait'},{t:'c',v:'()\n}'},
+       ]},
+      {id:'js',name:'JS',ic:'JS',color:'#ffd60a',
+       desc:'Secure frontend reactive systems, hardened authentication flows, and client-side cryptography. Every JS asset ships with Content Security Policies and subresource integrity checks.',
+       tags:['Frontend Sec','JWT','CSP','Auth'],
+       code:[
+         {t:'cmt',v:'// RS256 JWT verification + CSRF protection'},
+         {t:'c',v:'\n'},{t:'kw',v:'import'},{t:'c',v:' jwt '},{t:'kw',v:'from'},{t:'c',v:' '},{t:'str',v:'"jsonwebtoken"'},{t:'c',v:';'},
+         {t:'c',v:'\n\n'},{t:'kw',v:'const'},{t:'c',v:' '},{t:'fn',v:'verifyToken'},{t:'c',v:' = (token, req) => {'},
+         {t:'c',v:'\n  '},{t:'kw',v:'const'},{t:'c',v:' csrf = req.headers['},{t:'str',v:'"x-csrf-token"'},{t:'c',v:'];'},
+         {t:'c',v:'\n  '},{t:'kw',v:'if'},{t:'c',v:' (!csrf || csrf !== req.session.csrf)'},
+         {t:'c',v:'\n    '},{t:'kw',v:'throw new'},{t:'c',v:' Error('},{t:'str',v:'"CSRF mismatch"'},{t:'c',v:');'},
+         {t:'c',v:'\n  '},{t:'kw',v:'return'},{t:'c',v:' jwt.'},{t:'fn',v:'verify'},{t:'c',v:'(token, PUBLIC_KEY, {'},
+         {t:'c',v:'\n    algorithms: ['},{t:'str',v:'"RS256"'},{t:'c',v:'],'},
+         {t:'c',v:'\n    issuer: '},{t:'str',v:'"aktron.dev"'},
+         {t:'c',v:'\n  });\n};'},
+       ]},
+      {id:'c',name:'C',ic:'C',color:'#bf5af2',
+       desc:'Critical kernel-level security modules, firmware hardening, and memory-mapped I/O protection. The foundational language for OS security primitives and hardware-level defences.',
+       tags:['Kernel','Firmware','Low Level','OS Security'],
+       code:[
+         {t:'cmt',v:'// Kernel memory page protection (Linux)'},
+         {t:'c',v:'\n'},{t:'kw',v:'#include'},{t:'c',v:' '},{t:'str',v:'<linux/set_memory.h>'},
+         {t:'c',v:'\n\n'},{t:'kw',v:'static inline int'},{t:'c',v:' '},{t:'fn',v:'protect_pages'},{t:'c',v:'('},
+         {t:'c',v:'\n    '},{t:'kw',v:'void'},{t:'c',v:' *addr, size_t len) {'},
+         {t:'c',v:'\n    '},{t:'kw',v:'return'},{t:'c',v:' '},{t:'fn',v:'set_memory_ro'},{t:'c',v:'('},
+         {t:'c',v:'\n        (unsigned long)addr,'},
+         {t:'c',v:'\n        len >> PAGE_SHIFT'},
+         {t:'c',v:'\n    );'},
+         {t:'c',v:'\n}\n\n'},{t:'cmt',v:'// Enforce W^X: write XOR execute policy'},
+         {t:'c',v:'\n'},{t:'fn',v:'BUG_ON'},{t:'c',v:'(vma->vm_flags & (VM_WRITE | VM_EXEC));'},
+       ]},
+      {id:'java',name:'Java',ic:'Jv',color:'#ff6b61',
+       desc:'Enterprise-grade security sandboxing, secure KeyStore management, and PKCS#12 certificate handling for banking APIs and regulated financial infrastructure.',
+       tags:['Enterprise','Cryptography','KeyStore','Banking'],
+       code:[
+         {t:'cmt',v:'// PKCS#12 KeyStore with mutual TLS'},
+         {t:'c',v:'\n'},{t:'type',v:'KeyStore'},{t:'c',v:' ks = '},{t:'type',v:'KeyStore'},{t:'c',v:'.'},{t:'fn',v:'getInstance'},{t:'c',v:'('},{t:'str',v:'"PKCS12"'},{t:'c',v:');'},
+         {t:'c',v:'\nks.'},{t:'fn',v:'load'},{t:'c',v:'('},{t:'kw',v:'new'},{t:'c',v:' '},{t:'type',v:'FileInputStream'},{t:'c',v:'('},{t:'str',v:'"sec.p12"'},{t:'c',v:'),'},
+         {t:'c',v:'\n     passphrase.'},{t:'fn',v:'toCharArray'},{t:'c',v:'());'},
+         {t:'c',v:'\n\n'},{t:'type',v:'SSLContext'},{t:'c',v:' ctx = '},{t:'type',v:'SSLContext'},{t:'c',v:'.'},{t:'fn',v:'getInstance'},{t:'c',v:'('},{t:'str',v:'"TLSv1.3"'},{t:'c',v:');'},
+         {t:'c',v:'\n'},{t:'type',v:'KeyManagerFactory'},{t:'c',v:' kmf ='},
+         {t:'c',v:'\n    '},{t:'type',v:'KeyManagerFactory'},{t:'c',v:'.'},{t:'fn',v:'getInstance'},{t:'c',v:'('},{t:'str',v:'"PKIX"'},{t:'c',v:');'},
+         {t:'c',v:'\nkmf.'},{t:'fn',v:'init'},{t:'c',v:'(ks, passphrase.'},{t:'fn',v:'toCharArray'},{t:'c',v:'());'},
+         {t:'c',v:'\nctx.'},{t:'fn',v:'init'},{t:'c',v:'(kmf.'},{t:'fn',v:'getKeyManagers'},{t:'c',v:'(), '},{t:'kw',v:'null'},{t:'c',v:', '},{t:'kw',v:'null'},{t:'c',v:');'},
+       ]},
+      {id:'cs',name:'C#',ic:'C#',color:'#af52de',
+       desc:'Enterprise-grade encryption pipelines, secure identity management in .NET, and AES-GCM authenticated encryption for compliance-heavy environments.',
+       tags:['AES-GCM','Identity','.NET','Compliance'],
+       code:[
+         {t:'cmt',v:'// AES-256-GCM authenticated encryption'},
+         {t:'c',v:'\n'},{t:'kw',v:'using'},{t:'c',v:' var aes = '},{t:'kw',v:'new'},{t:'c',v:' '},{t:'type',v:'AesGcm'},{t:'c',v:'(key);'},
+         {t:'c',v:'\n'},{t:'kw',v:'var'},{t:'c',v:' nonce = '},{t:'kw',v:'new byte'},{t:'c',v:'['},{t:'type',v:'AesGcm'},{t:'c',v:'.NonceByteSizes.MaxSize];'},
+         {t:'c',v:'\n'},{t:'type',v:'RandomNumberGenerator'},{t:'c',v:'.'},{t:'fn',v:'Fill'},{t:'c',v:'(nonce);'},
+         {t:'c',v:'\n\naes.'},{t:'fn',v:'Encrypt'},{t:'c',v:'('},
+         {t:'c',v:'\n    nonce: nonce,'},
+         {t:'c',v:'\n    plaintext: plaintext,'},
+         {t:'c',v:'\n    ciphertext: ciphertext,'},
+         {t:'c',v:'\n    tag: authTag'},
+         {t:'c',v:'\n);'},
+         {t:'c',v:'\n\n'},{t:'cmt',v:'// Tag verifies integrity on decrypt — tamper-proof'},
+       ]},
+      {id:'sql',name:'SQL',ic:'SQL',color:'#30d158',
+       desc:'Injection-proof parameterised statements, row-level security policies, and cryptographic column encryption for protecting sensitive audit trails.',
+       tags:['SQL Injection','Row Security','Encryption','Auditing'],
+       code:[
+         {t:'cmt',v:'-- Parameterised query — SQL injection proof'},
+         {t:'c',v:'\n'},{t:'kw',v:'SELECT'},{t:'c',v:' u.id, u.email, '},
+         {t:'c',v:'\n       '},{t:'fn',v:'pgp_sym_decrypt'},{t:'c',v:'(u.secret, $2)'},
+         {t:'c',v:'\n'},{t:'kw',v:'FROM'},{t:'c',v:' users u'},
+         {t:'c',v:'\n'},{t:'kw',v:'WHERE'},{t:'c',v:' u.id = '},{t:'str',v:'$1'},{t:'c',v:'              '},
+         {t:'c',v:'\n  '},{t:'kw',v:'AND'},{t:'c',v:' u.active = '},{t:'kw',v:'TRUE'},
+         {t:'c',v:'\n  '},{t:'kw',v:'AND'},{t:'c',v:' u.role = '},{t:'kw',v:'current_user'},
+         {t:'c',v:'\n'},{t:'kw',v:'LIMIT'},{t:'c',v:' '},{t:'num',v:'1'},{t:'c',v:';'},
+         {t:'c',v:'\n\n'},{t:'cmt',v:'-- Row Level Security policy active for tenant isolation'},
+       ]},
+      {id:'html',name:'HTML',ic:'H5',color:'#ff9f0a',
+       desc:'Semantic markup with hardened Content Security Policies, Subresource Integrity, and CORS headers. Even markup is attack surface — we lock it down.',
+       tags:['CSP','SRI','CORS','Security Headers'],
+       code:[
+         {t:'cmt',v:'<!-- Strict Content Security Policy -->'},
+         {t:'c',v:'\n'},{t:'kw',v:'<meta'},
+         {t:'c',v:'\n  '},{t:'fn',v:'http-equiv'},{t:'c',v:'='},{t:'str',v:'"Content-Security-Policy"'},
+         {t:'c',v:'\n  content='},{t:'str',v:'"default-src \'self\';'},
+         {t:'c',v:'\n           script-src \'self\' \'nonce-r4nd0m\';'},
+         {t:'c',v:'\n           object-src \'none\';'},
+         {t:'c',v:'\n           upgrade-insecure-requests"'},{t:'c',v:'>'},
+         {t:'c',v:'\n\n'},{t:'cmt',v:'<!-- Subresource Integrity for CDN assets -->'},
+         {t:'c',v:'\n'},{t:'kw',v:'<script'},{t:'c',v:' '},{t:'fn',v:'integrity'},{t:'c',v:'='},{t:'str',v:'"sha384-abc\u2026"'},
+         {t:'c',v:'\n        '},{t:'fn',v:'crossorigin'},{t:'c',v:'='},{t:'str',v:'"anonymous"'},{t:'c',v:'>'},{t:'kw',v:'<\/script>'},
+       ]},
+      {id:'css',name:'CSS',ic:'C3',color:'#5ac8fa',
+       desc:'Performant design systems with hardware-accelerated animations, glass-morphism, and CSS-only defences against clickjacking via pointer-events isolation.',
+       tags:['UI Performance','Animations','Anti-Clickjacking','Design System'],
+       code:[
+         {t:'cmt',v:'/* Anti-clickjacking via pointer-events isolation */'},
+         {t:'c',v:'\n'},{t:'fn',v:'.secure-iframe-wrap'},{t:'c',v:' {'},
+         {t:'c',v:'\n  pointer-events: '},{t:'kw',v:'none'},{t:'c',v:';'},
+         {t:'c',v:'\n  user-select: '},{t:'kw',v:'none'},{t:'c',v:';\n}\n\n'},
+         {t:'cmt',v:'/* Glass-morphism panel — Apple design language */'},
+         {t:'c',v:'\n'},{t:'fn',v:'.glass'},{t:'c',v:' {'},
+         {t:'c',v:'\n  backdrop-filter: blur('},{t:'num',v:'24px'},{t:'c',v:') saturate('},{t:'num',v:'180%'},{t:'c',v:');'},
+         {t:'c',v:'\n  background: rgba('},{t:'num',v:'255'},{t:'c',v:','},{t:'num',v:'255'},{t:'c',v:','},{t:'num',v:'255'},{t:'c',v:',.38);'},
+         {t:'c',v:'\n  border: 1px solid rgba('},{t:'num',v:'255'},{t:'c',v:','},{t:'num',v:'255'},{t:'c',v:','},{t:'num',v:'255'},{t:'c',v:',.5);'},
+         {t:'c',v:'\n  transition: all .'},{t:'num',v:'3'},{t:'c',v:'s cubic-bezier(.'},{t:'num',v:'16'},{t:'c',v:','},{t:'num',v:'1'},{t:'c',v:',.'},{t:'num',v:'3'},{t:'c',v:','},{t:'num',v:'1'},{t:'c',v:');\n}'},
+       ]},
+    ];
+
+    /* colour map for syntax */
+    const CC={c:'#cdd6f4',kw:'#cba6f7',str:'#a6e3a1',cmt:'#6c7086',num:'#fab387',fn:'#89b4fa',type:'#f9e2af'};
+
+    function renderTokens(tokens){
+      return tokens.map(tk=>`<span style="color:${CC[tk.t]||CC.c}">${escHtml(tk.v)}</span>`).join('');
+    }
+    function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+    let activeId=null;
+    let typeTimer=null;
+
+    function openLang(l){
+      const wrap=document.getElementById('langPanelWrap');
+      const panel=document.getElementById('langPanel');
+      if(!wrap||!panel)return;
+
+      // Update info
+      const dot=document.getElementById('lpBadgeDot');
+      const lbl=document.getElementById('lpBadgeLang');
+      const nm=document.getElementById('lpName');
+      const dc=document.getElementById('lpDesc');
+      const tags=document.getElementById('lpTags');
+      const tt=document.getElementById('lpTermTitle');
+      if(dot)dot.style.background=l.color;
+      if(lbl)lbl.textContent=l.name;
+      if(nm){nm.textContent=l.name;nm.style.color=l.color;}
+      if(dc)dc.textContent=l.desc;
+      if(tt)tt.textContent=`aktron@mac — ${l.name.toLowerCase()}`;
+      if(tags){
+        tags.innerHTML='';
+        (l.tags||[]).forEach(t=>{
+          const s=document.createElement('span');
+          s.className='lp-tag';
+          s.textContent=t;
+          tags.appendChild(s);
+        });
+      }
+
+      // Open panel if closed
+      if(!wrap.classList.contains('open')){
+        wrap.classList.add('open');
+      } else {
+        // Re-trigger entrance animation when switching languages
+        const panel=document.getElementById('langPanel');
+        if(panel){
+          panel.style.animation='none';
+          panel.offsetHeight; // reflow
+          panel.style.animation='';
+        }
+      }
+
+      // Typewriter into terminal
+      const tb=document.getElementById('lpTermBody');
+      if(!tb)return;
+      if(typeTimer)clearTimeout(typeTimer);
+      tb.innerHTML='<span style="color:#6c7086">aktron@mac~$ </span>';
+      const cmdSpan=document.createElement('span');
+      cmdSpan.style.color='#89b4fa';
+      const cmdStr=`run --lang=${l.name.toLowerCase()} --mode=security\n\n`;
+      tb.appendChild(cmdSpan);
+      const cur=document.createElement('span');
+      cur.className='lp-cursor';
+      tb.appendChild(cur);
+
+      let i=0;
+      function typeCmd(){
+        if(i<cmdStr.length){
+          cmdSpan.textContent+=cmdStr[i++];
+          typeTimer=setTimeout(typeCmd,30);
+        } else {
+          // Render syntax-highlighted code
+          cur.remove();
+          const pre=document.createElement('pre');
+          pre.style.cssText='margin:0;white-space:pre-wrap;word-break:break-word;';
+          pre.innerHTML=renderTokens(l.code)+'<span class="lp-cursor"></span>';
+          tb.appendChild(pre);
+        }
+      }
+      typeCmd();
+    }
+
+    /* Build pills */
+    const pillsWrap=document.getElementById('langPills');
+    if(pillsWrap){
+      langs.forEach((l,i)=>{
+        const pill=document.createElement('button');
+        pill.className='lang-pill';
+        pill.style.setProperty('--pill-color',l.color);
+        pill.innerHTML=`<span class="lang-pill-dot" style="background:${l.color}"></span><span class="lang-pill-name">${l.name}</span>`;
+        pill.onclick=()=>{
+          const same=activeId===l.id;
+          document.querySelectorAll('.lang-pill').forEach(p=>p.classList.remove('active'));
+          if(same){
+            activeId=null;
+            const wrap=document.getElementById('langPanelWrap');
+            if(wrap)wrap.classList.remove('open');
+          } else {
+            activeId=l.id;
+            pill.classList.add('active');
+            openLang(l);
+          }
+        };
+        pillsWrap.appendChild(pill);
+      });
+    }
+
+    /* Ticker */
+    const ticker=document.getElementById('stackTicker');
+    if(ticker){
+      [...langs,...langs].forEach(l=>{
+        const d=document.createElement('div');
+        d.className='stack-ticker-item';
+        d.textContent=l.name;
+        ticker.appendChild(d);
+      });
+    }
+
+    /* ── SCROLL REVEAL ── */
+    const obs=new IntersectionObserver(es=>{
+      es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});
+    },{threshold:0.08});
+    document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+
+    /* ── SKILL BARS ── */
+    const skillObs=new IntersectionObserver(es=>{
+      es.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.querySelectorAll('.sk-fill').forEach(f=>{
+            f.style.width=(f.dataset.w||'0')+'%';
+          });
+        }
+      });
+    },{threshold:0.3});
+    document.querySelectorAll('.team-card').forEach(c=>skillObs.observe(c));
+
+    /* ── BAR CHARTS ── */
+    const barObs=new IntersectionObserver(es=>{
+      es.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.querySelectorAll('.bar-fill').forEach(b=>{
+            const h=b.style.height;b.style.height='0';
+            setTimeout(()=>b.style.height=h,100);
+          });
+        }
+      });
+    },{threshold:0.3});
+    document.querySelectorAll('.chart-box').forEach(c=>barObs.observe(c));
+
+    /* ── COUNTER ANIMATION ── */
+    function animCount(el){
+      const target=parseInt(el.dataset.t)||0;
+      const suffix=el.dataset.s||'';
+      let cur=0;
+      const step=Math.ceil(target/40);
+      const iv=setInterval(()=>{
+        cur=Math.min(cur+step,target);
+        el.textContent=cur+suffix;
+        if(cur>=target)clearInterval(iv);
+      },30);
+    }
+    const statObs=new IntersectionObserver(es=>{
+      es.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.querySelectorAll('[data-t]').forEach(animCount);
+          statObs.unobserve(e.target);
+        }
+      });
+    },{threshold:0.5});
+    const hs=document.getElementById('heroStats');
+    if(hs)statObs.observe(hs);
+
+    /* ── SCROLL PROGRESS + NAV ── */
+    window.addEventListener('scroll',()=>{
+      const prg=document.getElementById('progress');
+      if(prg)prg.style.width=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight)*100)+'%';
+    },{passive:true});
+
+    /* ── CLOCK ── */
+    function updateTime(){
+      const d=new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+      ['navClock','revTime','cpTime'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el)el.textContent=d;
+      });
+    }
+    setInterval(updateTime,1000);updateTime();
+
+    /* ── NAV ── */
+    window.toggleMob=()=>{
+      document.getElementById('mobMenu')?.classList.toggle('open');
+      document.getElementById('burger')?.classList.toggle('open');
+    };
+    window.closeMob=()=>{
+      document.getElementById('mobMenu')?.classList.remove('open');
+      document.getElementById('burger')?.classList.remove('open');
+    };
+
+    /* ── SPOTLIGHT ── */
+    const SP_DATA={
+      en:[{n:'Services',s:'Security & Web',h:'#services'},{n:'Portfolio',s:'Selected work',h:'#portfolio'},{n:'Team',s:'nmap & linus',h:'#team'},{n:'Stack',s:'Technologies',h:'#stack'},{n:'Contact',s:'Start project',h:'#contact'}],
+      ru:[{n:'Услуги',s:'Безопасность и Веб',h:'#services'},{n:'Работы',s:'Избранные проекты',h:'#portfolio'},{n:'Команда',s:'nmap и linus',h:'#team'},{n:'Стек',s:'Технологии',h:'#stack'},{n:'Контакт',s:'Начать проект',h:'#contact'}]
+    };
+    let spIdx=-1;
+    function renderSpList(q){
+      const list=document.getElementById('spList');if(!list)return;
+      const items=SP_DATA[CL].filter(i=>!q||i.n.toLowerCase().includes(q.toLowerCase()));
+      list.innerHTML=items.map((i,idx)=>`<a class="sp-item${idx===spIdx?' sel':''}" href="${i.h}" onclick="closeSpotlight()"><div class="sp-item-icon"><svg width="14" height="14" viewBox="0 0 13 13" fill="none"><path d="M1.5 11L6.5 1.5l5 9.5M3.5 7.5h6" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="sp-item-n">${i.n}</div><div class="sp-item-s">${i.s}</div></div></a>`).join('');
+    }
+    window.openSpotlight=()=>{document.getElementById('spBg')?.classList.add('open');document.getElementById('spInput')?.focus();renderSpList('');};
+    window.closeSpotlight=()=>document.getElementById('spBg')?.classList.remove('open');
+    const spIn=document.getElementById('spInput');
+    if(spIn){
+      spIn.addEventListener('input',()=>renderSpList(spIn.value));
+      spIn.addEventListener('keydown',e=>{
+        if(e.key==='Escape')closeSpotlight();
+      });
+    }
+    document.addEventListener('keydown',e=>{
+      if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSpotlight();}
+      if(e.key==='Escape')closeSpotlight();
+    });
+
+    /* ── iMESSAGE REVIEWS ── */
+    window.loadReview=(idx,btn)=>{
+      document.querySelectorAll('.imsg-tab').forEach(t=>t.classList.remove('active'));
+      btn?.classList.add('active');
+      const msgContainer=document.getElementById('revChat');
+      if(!msgContainer)return;
+      const chat=TX[CL].chats[idx];
+      const color=chat.color||'#ff6b35';
+      ['revAvSm','revAvLg'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el){el.textContent=chat.init;el.style.background=color;}
+      });
+      ['revNmSm','revNmLg'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el)el.textContent=chat.name;
+      });
+      msgContainer.innerHTML='<div class="iph-date">iMessage · Today</div>';
+      chat.msgs.forEach((m,i)=>{
+        setTimeout(()=>{
+          const r=document.createElement('div');
+          r.className=`chat-row ${m.d} show`;
+          r.innerHTML=`<div class="bubble ${m.d}">${m.t}</div>`;
+          msgContainer.appendChild(r);
+          msgContainer.scrollTop=msgContainer.scrollHeight;
+        },(i+1)*650);
+      });
+    };
+    const initialTab=document.querySelector('.imsg-tab');
+    if(initialTab)window.loadReview(0,initialTab);
+
+    /* ── CONTACT CHAT ── */
+    const cpField=document.getElementById('cpField');
+    const cpSend=document.getElementById('cpSend');
+    const cpChat=document.getElementById('cpChat');
+    if(cpField&&cpSend&&cpChat){
+      cpField.addEventListener('input',()=>cpSend.disabled=!cpField.value.trim());
+      cpField.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendCP();}});
+      cpSend.addEventListener('click',sendCP);
+    }
+    function sendCP(){
+      if(!cpField||!cpField.value.trim())return;
+      const msg=cpField.value.trim();
+      cpField.value='';
+      if(cpSend)cpSend.disabled=true;
+      addCPMsg('sent',msg);
+      setTimeout(()=>{
+        addCPMsg('recv',TX[CL].cp_r1);
+        setTimeout(()=>addCPMsg('recv',TX[CL].cp_r2),1200);
+      },800);
+    }
+    function addCPMsg(dir,text){
+      if(!cpChat)return;
+      const r=document.createElement('div');
+      r.className=`chat-row ${dir}`;
+      r.innerHTML=`<div class="bubble ${dir}">${text}</div>`;
+      cpChat.appendChild(r);
+      requestAnimationFrame(()=>r.classList.add('show'));
+      cpChat.scrollTop=cpChat.scrollHeight;
+    }
+
+    /* ── FAQ ── */
+    document.querySelectorAll('.faq-q').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const item=btn.closest('.faq-item');
+        const open=item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+        if(!open)item.classList.add('open');
+      });
+    });
+
+    /* ── SERVICE CARD SPOTLIGHT ── */
+    document.querySelectorAll('.svc-card').forEach(card=>{
+      card.addEventListener('mousemove',e=>{
+        const r=card.getBoundingClientRect();
+        card.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+        card.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
+      });
+    });
+
+    /* ── HERO TERMINAL TYPEWRITER ── */
+    (function(){
+      const tb=document.getElementById('heroTermBody');
+      if(!tb)return;
+      const lines=[
+        {cls:'ht-prompt',t:'aktron@mac~$ '},{cls:'ht-cmd',t:'nmap -sV --script vuln target.io\n'},
+        {cls:'ht-out',t:'Starting Nmap 7.94 scan...\n'},
+        {cls:'ht-info',t:'PORT    STATE  SERVICE  VERSION\n'},
+        {cls:'ht-out',t:'22/tcp  open   ssh      OpenSSH 8.9\n'},
+        {cls:'ht-out',t:'80/tcp  open   http     nginx 1.24\n'},
+        {cls:'ht-out',t:'443/tcp open   https    nginx 1.24\n'},
+        {cls:'ht-warn',t:'VULN: CVE-2024-0001 — CRITICAL 9.8\n'},
+        {cls:'ht-out',t:'| ssl-heartbleed: VULNERABLE\n'},
+        {cls:'ht-prompt',t:'aktron@mac~$ '}
+      ];
+      tb.innerHTML='';
+      const cur=document.createElement('span');
+      cur.className='ht-cursor';
+      let li=0,ci=0;
+      function typeNext(){
+        if(li>=lines.length){tb.appendChild(cur);return;}
+        const line=lines[li];
+        let span=tb.querySelector('[data-li="'+li+'"]');
+        if(!span){
+          span=document.createElement('span');
+          span.className=line.cls;
+          span.dataset.li=li;
+          tb.appendChild(span);
+        }
+        if(ci<line.t.length){
+          span.textContent+=line.t[ci++];
+          setTimeout(typeNext,line.cls==='ht-cmd'?35:18);
+        } else {
+          li++;ci=0;
+          setTimeout(typeNext,line.cls==='ht-cmd'?280:60);
+        }
+      }
+      setTimeout(typeNext,600);
+    })();
+
+  })();
+  </script>
+</body>
+</html>
